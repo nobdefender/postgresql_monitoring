@@ -11,7 +11,7 @@ builder.Services.RegisterDbServices();
 builder.Services.AddSwaggerGen();
 
 builder.Services.RegisterOptions(conf);
-builder.Services.RegisterProvider();
+builder.Services.RegisterProvider(conf);
 
 builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddTransient<IUserProvider, UserProvider>();

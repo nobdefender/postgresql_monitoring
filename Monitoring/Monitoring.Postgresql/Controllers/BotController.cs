@@ -9,13 +9,13 @@ namespace Monitoring.Postgresql.Controllers
     [ApiExplorerSettings(IgnoreApi = true)]
     [ApiController]
     [Route("/")]
-    public class TestController : ControllerBase
+    public class BotController : ControllerBase
     {
-        private readonly TelegramBotProvider _telegramBotProvider;
+        private readonly TelegramBotClient _telegramBotClient;
 
-        public TestController(TelegramBotProvider telegramBotProvider) 
+        public BotController(TelegramBotClient telegramBotClient) 
         {
-            _telegramBotProvider = telegramBotProvider;
+            _telegramBotClient = telegramBotClient;
         }
 
         private readonly InlineKeyboardMarkup buttons = new InlineKeyboardMarkup(new[]
@@ -29,7 +29,7 @@ namespace Monitoring.Postgresql.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Update update)
         {
-            var tgClient = _telegramBotProvider.GetBot();
+            var tgClient = _telegramBotClient;
 
             if (update.Type == Telegram.Bot.Types.Enums.UpdateType.Message)
             {
