@@ -8,6 +8,7 @@ using Monitoring.Postgresql.Providers.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Monitoring.Postgresql.Extensions;
+using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 var conf = builder.Configuration;
@@ -57,10 +58,18 @@ app.UseAuthentication();
 app.MapControllers();
 app.UseCors("AllowAllHeaders");
 
-using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
+
+if (app.Environment.IsDevelopment())
 {
-    var context = serviceScope.ServiceProvider.GetService<MonitoringServiceDbContext>();
-    context?.Database.Migrate();
+    app.UseSwagger();
+    app.UseSwaggerUI();
+    app.UseCors(
+        builder => builder
+            .WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials()
+    );
 }
 
 app.Run();

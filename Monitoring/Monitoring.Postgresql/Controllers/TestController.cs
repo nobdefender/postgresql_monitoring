@@ -6,6 +6,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Monitoring.Postgresql.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     [ApiController]
     [Route("/")]
     public class TestController : ControllerBase
