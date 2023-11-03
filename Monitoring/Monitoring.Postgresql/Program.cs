@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Monitoring.Posgresql.Infrastructure;
 using Monitoring.Postgresql.Logic.Registars;
 using Monitoring.Postgresql.Providers.Implementations;
-using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 var conf = builder.Configuration;
@@ -35,6 +34,12 @@ if (app.Environment.IsDevelopment())
             .AllowAnyMethod()
             .AllowCredentials()
     );
+}
+
+using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
+{
+    var context = serviceScope.ServiceProvider.GetService<MonitoringServiceDbContext>();
+    context?.Database.Migrate();
 }
 
 app.Run();
