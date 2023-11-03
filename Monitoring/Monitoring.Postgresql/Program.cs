@@ -2,17 +2,17 @@ using System.Text;
 using Monitoring.Postgresql.Registrars;
 using Microsoft.EntityFrameworkCore;
 using Monitoring.Posgresql.Infrastructure;
-using Monitoring.Postgresql.Logic.Registars;
 using Monitoring.Postgresql.Providers.Implementations;
 using Monitoring.Postgresql.Providers.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Monitoring.Postgresql.Extensions;
+using Monitoring.Postgresql.Logic.Registrars;
 
 var builder = WebApplication.CreateBuilder(args);
 var conf = builder.Configuration;
 builder.Services.RegisterDbServices();
-
+builder.Services.RegisterSwagger(builder);
 builder.Services.AddSwaggerGen();
 
 builder.Services.RegisterOptions(conf);
@@ -33,6 +33,7 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddSettings(conf);
 builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddTransient<IUserProvider, UserProvider>();
+builder.Services.AddTransient<IActionProvider, ActionProvider>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters()

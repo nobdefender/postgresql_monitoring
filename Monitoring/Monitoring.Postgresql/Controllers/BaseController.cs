@@ -18,7 +18,7 @@ public class BaseController : ControllerBase
         _logger = logger;
     }
 
-    protected int GetUserId()
+    protected int? GetUserId()
     {
         int.TryParse(_httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault()?.Value, out int userId);
         return userId;

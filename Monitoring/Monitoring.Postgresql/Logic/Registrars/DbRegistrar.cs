@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Monitoring.Posgresql.Infrastructure;
 
-namespace Monitoring.Postgresql.Logic.Registars;
+namespace Monitoring.Postgresql.Logic.Registrars;
 
-public static class DbRegistar
+public static class DbRegistrar
 {
     /// <summary>
     /// Регистрирует ДБ контекст.

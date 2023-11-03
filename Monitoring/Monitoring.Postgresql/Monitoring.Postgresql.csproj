@@ -26,10 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Providers\Interfaces\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Monitoring.Posgresql.Infrastructure\Monitoring.Posgresql.Infrastructure.csproj" />
   </ItemGroup>
 
