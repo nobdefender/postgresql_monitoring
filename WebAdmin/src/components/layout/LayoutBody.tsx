@@ -11,14 +11,14 @@ type LayoutBodyProps = PropsWithChildren;
 export const LayoutBody: React.FC<LayoutBodyProps> = ({ children }) => {
   const { user } = useAuthenticationContext();
   const navigate = useNavigate();
-  const isTaskPageRoute = useMatch('/tasks');
+  const isMainRoute = useMatch('/main');
 
   return (
     <Stack mt={60} h="100%">
       {!isNil(user) ? (
         <>
           <Box w="70%" my="xl" mx="auto">
-            {!isTaskPageRoute && (
+            {!isMainRoute && (
               <Anchor onClick={() => navigate(-1)}>
                 <Flex mb="lg" gap="xs" align="center">
                   <IconArrowLeft size={16} className={classes.backIcon} />
