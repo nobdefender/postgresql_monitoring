@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Monitoring.Posgresql.Infrastructure;
 using Monitoring.Postgresql.Logic.Registars;
 using Monitoring.Postgresql.Providers.Implementations;
+using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 var conf = builder.Configuration;
@@ -22,10 +23,18 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
-using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
+
+if (app.Environment.IsDevelopment())
 {
-    var context = serviceScope.ServiceProvider.GetService<MonitoringServiceDbContext>();
-    context?.Database.Migrate();
+    app.UseSwagger();
+    app.UseSwaggerUI();
+    app.UseCors(
+        builder => builder
+            .WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials()
+    );
 }
 
 app.Run();
