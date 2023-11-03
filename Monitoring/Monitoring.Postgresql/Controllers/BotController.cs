@@ -35,10 +35,13 @@ namespace Monitoring.Postgresql.Controllers
             {
                 if (update.Message?.Text == "/start")
                 {
-
                     await tgClient.SendTextMessageAsync(update.Message.From.Id, "comands", replyMarkup: buttons);
+                    return Ok();
+                }
 
-
+                if (update.Message?.Text == "/get_chat_id" || update.Message?.Text == "/getid")
+                {
+                    await tgClient.SendTextMessageAsync(update.Message.Chat.Id, $"{update.Message.Chat.Id}");
                     return Ok();
                 }
             }
@@ -53,7 +56,8 @@ namespace Monitoring.Postgresql.Controllers
                 }
             }
 
-            return BadRequest();
+            return Ok();
+            //return BadRequest();
         }
 
         [HttpGet]

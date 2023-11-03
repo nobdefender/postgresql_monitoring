@@ -36,10 +36,10 @@ if (app.Environment.IsDevelopment())
     );
 }
 
-using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
-{
-    var context = serviceScope.ServiceProvider.GetService<MonitoringServiceDbContext>();
-    context?.Database.Migrate();
-}
+//using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
+//{
+//    var context = serviceScope.ServiceProvider.GetService<MonitoringServiceDbContext>();
+//    context?.Database.Migrate();
+//}
 
 app.Run();

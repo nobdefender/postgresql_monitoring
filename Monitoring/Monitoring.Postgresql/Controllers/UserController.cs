@@ -5,7 +5,7 @@ using Monitoring.Postgresql.Providers.Implementations;
 
 namespace Monitoring.Postgresql.Controllers;
 
-public class UserController : BaseController
+public class UserController : UserBaseController
 {
     private readonly IUserProvider _userProvider;
 
