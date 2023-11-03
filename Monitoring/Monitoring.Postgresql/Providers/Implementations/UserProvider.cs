@@ -235,8 +235,8 @@ public class UserProvider : IUserProvider
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
-    
-    public static string? GetPasswordHash(string password)
+
+    private static string? GetPasswordHash(string password)
     {
         var salt = Encoding.ASCII.GetBytes(PASSWORD_SALT);
         var hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
