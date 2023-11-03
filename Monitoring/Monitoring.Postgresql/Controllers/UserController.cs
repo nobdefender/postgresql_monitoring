@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Monitoring.Postgresql.Models.Auth;
 using Monitoring.Postgresql.Providers.Implementations;
+using Monitoring.Postgresql.Providers.Interfaces;
 
 namespace Monitoring.Postgresql.Controllers;
 
@@ -18,30 +19,30 @@ public class UserController : BaseController
         _userProvider = userProvider;
     }
 
-    // /// <summary>
-    // /// Авторизация пользователя
-    // /// </summary>
-    // /// <param name="userLoginRequest"></param>
-    // /// <param name="cancellationToken"></param>
-    // /// <returns></returns>
-    // [AllowAnonymous]
-    // [HttpPost(nameof(Login))]
-    // // [SwaggerResponse(200, Type = typeof(string))]
-    // public async Task<IResult> Login([FromBody] UserLoginRequest userLoginRequest,
-    //     CancellationToken cancellationToken)
-    // {
-    //     try
-    //     {
-    //         var user = await _userProvider.LoginAsync(userLoginRequest, cancellationToken);
-    //         return user;
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         _logger.LogError(e, "Ошибка получения данных пользователя");
-    //         return Results.NotFound("Пользователь не найден");
-    //     }
-    // }
-    //
+    /// <summary>
+    /// Авторизация пользователя
+    /// </summary>
+    /// <param name="userLoginRequest"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [AllowAnonymous]
+    [HttpPost(nameof(Login))]
+    // [SwaggerResponse(200, Type = typeof(string))]
+    public async Task<IResult> Login([FromBody] UserLoginRequest userLoginRequest,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var user = await _userProvider.LoginAsync(userLoginRequest, cancellationToken);
+            return user;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Ошибка получения данных пользователя");
+            return Results.NotFound("Пользователь не найден");
+        }
+    }
+    
     // /// <summary>
     // /// Обновление Access токена
     // /// </summary>

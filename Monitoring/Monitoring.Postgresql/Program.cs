@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Monitoring.Posgresql.Infrastructure;
 using Monitoring.Postgresql.Logic.Registars;
 using Monitoring.Postgresql.Providers.Implementations;
+using Monitoring.Postgresql.Providers.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.RegisterDbServices();
