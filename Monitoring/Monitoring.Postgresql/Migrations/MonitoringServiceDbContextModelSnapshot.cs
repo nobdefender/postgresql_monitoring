@@ -22,6 +22,51 @@ namespace Monitoring.Postgresql.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Monitoring.Posgresql.Infrastructure.Models.Access.ActionDbModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Actionid")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Esc_period")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Eventsource")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Notify_if_canceled")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Pause_suppressed")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Pause_symptoms")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Actions");
+                });
+
             modelBuilder.Entity("Monitoring.Posgresql.Infrastructure.Models.Auth.UserDbModel", b =>
                 {
                     b.Property<int>("Id")
@@ -85,6 +130,29 @@ namespace Monitoring.Postgresql.Migrations
                             Role = "Reviewer",
                             Username = "Reviewer"
                         });
+                });
+
+            modelBuilder.Entity("Monitoring.Posgresql.Infrastructure.Models.Bindings.UserToActionDbModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ActiondId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserToAction");
                 });
 #pragma warning restore 612, 618
         }

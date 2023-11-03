@@ -1,21 +1,19 @@
 ﻿using System.Text.Json;
 using AutoMapper;
-using Monitoring.Posgresql.Infrastructure.Models.Access;
 using Monitoring.Posgresql.Infrastructure.Models.Auth;
-using Monitoring.Postgresql.Models.Action;
 using Monitoring.Postgresql.Models.Auth;
 
-namespace Monitoring.Postgresql.Mappers;
+namespace Monitoring.Postgresql.Mappings;
 
-public class DbModelsToDTOModels : Profile
+public class DbModelsToDTOModelsMapping : Profile
 {
-    public DbModelsToDTOModels()
+    public DbModelsToDTOModelsMapping()
     {
         CreateMap<UserDbModel, UpsertUserDTO>()
             .ReverseMap()
-            .ForMember(dto => dto.EmailAddress, db => db.MapFrom(model => model.EmailAddress.ToLower()));
+            .ForMember(dto => dto.EmailAddress, db => db.MapFrom(model => model.EmailAddress.ToLower()))
+            ;
         CreateMap<UserDbModel, UserDTO>().ReverseMap();
-        CreateMap<ActionDbModel, ActionDTO>();
     }
 
     private static TimeSpan? Deserialize(string? timeSpan) =>

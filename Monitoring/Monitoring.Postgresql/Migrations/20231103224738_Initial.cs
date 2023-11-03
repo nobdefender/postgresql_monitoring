@@ -15,6 +15,26 @@ namespace Monitoring.Postgresql.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Actions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Actionid = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Eventsource = table.Column<string>(type: "text", nullable: false),
+                    Status = table.Column<string>(type: "text", nullable: false),
+                    Esc_period = table.Column<string>(type: "text", nullable: false),
+                    Pause_suppressed = table.Column<string>(type: "text", nullable: false),
+                    Notify_if_canceled = table.Column<string>(type: "text", nullable: false),
+                    Pause_symptoms = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Actions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -34,6 +54,21 @@ namespace Monitoring.Postgresql.Migrations
                     table.PrimaryKey("PK_UserModel", x => x.Id);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "UserToAction",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    ActiondId = table.Column<string>(type: "text", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserToAction", x => x.Id);
+                });
+
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "EmailAddress", "LastName", "Name", "Password", "RefreshToken", "RefreshTokenExpiryTime", "Role", "Username" },
@@ -48,7 +83,13 @@ namespace Monitoring.Postgresql.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Actions");
+
+            migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "UserToAction");
         }
     }
 }

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Monitoring.Postgresql.Models.Auth;
-using Monitoring.Postgresql.Providers.Implementations;
 using Monitoring.Postgresql.Providers.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -44,7 +43,7 @@ public class UserController : UserBaseController
             return Results.NotFound("Пользователь не найден");
         }
     }
-    
+
     /// <summary>
     /// Обновление Access токена
     /// </summary>
@@ -67,7 +66,7 @@ public class UserController : UserBaseController
             return Results.NotFound("Ошибка обновления токена");
         }
     }
-    
+
     /// <summary>
     /// Получить всех пользователей
     /// </summary>
@@ -88,7 +87,7 @@ public class UserController : UserBaseController
             return Results.NotFound("Комментарии не получены");
         }
     }
-    
+
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet("GetUserData")]
     [SwaggerResponse(200, Type = typeof(UserDTO))]
@@ -102,7 +101,7 @@ public class UserController : UserBaseController
             {
                 return Results.NotFound("Пользователь не найден");
             }
-    
+
             var user = await _userProvider.GetById(userId, cancellationToken);
             return Results.Ok(user);
         }
@@ -112,7 +111,7 @@ public class UserController : UserBaseController
             return Results.NotFound("Пользователь не найден");
         }
     }
-    
+
     /// <summary>
     /// Создать/обновить пользователя
     /// </summary>
@@ -135,7 +134,7 @@ public class UserController : UserBaseController
             return Results.NotFound("Пользователь не создан/обновлён");
         }
     }
-    
+
     /// <summary>
     /// Установить пароль
     /// </summary>
