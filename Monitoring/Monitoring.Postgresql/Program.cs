@@ -2,6 +2,7 @@ using Monitoring.Postgresql.Registrars;
 using Microsoft.EntityFrameworkCore;
 using Monitoring.Posgresql.Infrastructure;
 using Monitoring.Postgresql.Logic.Registars;
+using Monitoring.Postgresql.Providers.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 var conf = builder.Configuration;
