@@ -17,7 +17,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.RegisterOptions(conf);
 builder.Services.RegisterProvider(conf);
-builder.Services.RegisterMapperServices();
+builder.Services.RegisterMapper();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllHeaders",

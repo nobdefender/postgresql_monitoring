@@ -1,22 +1,29 @@
-﻿using Microsoft.Extensions.Options;
+﻿using AutoMapper;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using MongoDB.Driver.Core.WireProtocol.Messages;
 using Monitoring.Posgresql.Infrastructure.Extensions;
 using Monitoring.Posgresql.Infrastructure.Mongo;
 using Monitoring.Postgresql.Models;
 using Monitoring.Postgresql.Options;
-using Newtonsoft.Json.Linq;
 
 namespace Monitoring.Postgresql.Providers.Implementations;
 
 public class UserActionProvider : IUserActionProvider
 {
-    private IMongoCollection<UserActionDbModel> _userActionCollection;
+    //TODO: add interface
 
-    public UserActionProvider(IMongoFactory mongoFactory, IOptions<UserActionOptions> userActionOptions)
+    private readonly IMongoCollection<UserActionDbModel> _userActionCollection;
+    private readonly BotProvider _botProvider;
+    private readonly IMapper _mapper;
+
+    public UserActionProvider(IMongoFactory mongoFactory, IOptions<UserActionOptions> userActionOptions, IMapper mapper,
+        BotProvider botProvider)
     {
         var db = mongoFactory.GetDatabase(userActionOptions.Value.UserAction.MongoConnectionString);
         _userActionCollection = db.GetCollection<UserActionDbModel>("UserActionModel");
+
+        _mapper = mapper;
+        _botProvider = botProvider;
     }
 
     private static long GetHash(UserActionDbModel userActionModel)
@@ -31,15 +38,14 @@ public class UserActionProvider : IUserActionProvider
 
     public async Task SaveUserAction(ZabbixRequestModel zabbixRequestModel, CancellationToken cancellationToken)
     {
-        // TODO: add map
-        var test = new UserActionDbModel[] { };
+        var userActionDbModels = _mapper.Map<UserActionDbModel[]>(zabbixRequestModel.userActionModels);
 
-        foreach (var item in test)
+        foreach (var userActionDbModelItem in userActionDbModels)
         {
-            item.Hash = GetHash(item);
+            userActionDbModelItem.Hash = GetHash(userActionDbModelItem);
         }
 
-        var upsertOperations = test.Select(x => new ReplaceOneModel<UserActionDbModel>(
+        var upsertOperations = userActionDbModels.Select(x => new ReplaceOneModel<UserActionDbModel>(
                         Builders<UserActionDbModel>.Filter.Eq(y => y.Hash, x.Hash),
                         x
                         )
@@ -47,14 +53,15 @@ public class UserActionProvider : IUserActionProvider
             IsUpsert = true
         });
 
-        await _userActionCollection.BulkWriteAsync(upsertOperations);
+        await _userActionCollection.BulkWriteAsync(upsertOperations, cancellationToken: cancellationToken);
 
-        //await _userActionCollection.UpdateManyAsync()// ReplaceAsync(x => x.Hash == test.Hash, test, new ReplaceOptions() { IsUpsert = true });
-
+        await _botProvider.SendUserActionMessage(userActionDbModels, cancellationToken);
     }
 
-    public async Task<bool> GetUserAction(UserActionRequestModel userActionDbModel, CancellationToken cancellationToken)
+    public async Task<bool> GetUserAction(UserActionRequestModel userActionRequestModel, CancellationToken cancellationToken)
     {
+        var userActionDbModel = _mapper.Map<UserActionDbModel>(userActionRequestModel);
+
         var hash = GetHash(userActionDbModel);
 
         var selectedUserActions = await _userActionCollection.Find(Builders<UserActionDbModel>.Filter.And(

@@ -15,7 +15,7 @@ public class BotProvider : IBotProvider
         _telegramBotClient = telegramBotClient;
     }
 
-    public async Task SendUserActionMessage(UserActionDbModel[] userActionDbModels)
+    public async Task SendUserActionMessage(UserActionDbModel[] userActionDbModels, CancellationToken cancellationToken)
     {
         long[] chatIds = new[] { 1l};
 
