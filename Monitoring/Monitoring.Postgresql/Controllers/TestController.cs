@@ -10,6 +10,13 @@ namespace Monitoring.Postgresql.Controllers
     [Route("/")]
     public class TestController : ControllerBase
     {
+        private readonly TelegramBotProvider _telegramBotProvider;
+
+        public TestController(TelegramBotProvider telegramBotProvider) 
+        {
+            _telegramBotProvider = telegramBotProvider;
+        }
+
         private readonly InlineKeyboardMarkup buttons = new InlineKeyboardMarkup(new[]
             {
                 new[]
@@ -21,7 +28,7 @@ namespace Monitoring.Postgresql.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Update update)
         {
-            var tgClient = TelegramBotProvider.GetBot();
+            var tgClient = _telegramBotProvider.GetBot();
 
             if (update.Type == Telegram.Bot.Types.Enums.UpdateType.Message)
             {

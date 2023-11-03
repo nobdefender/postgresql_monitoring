@@ -1,3 +1,4 @@
+using Monitoring.Postgresql.Registrars;
 using Microsoft.EntityFrameworkCore;
 using Monitoring.Posgresql.Infrastructure;
 using Monitoring.Postgresql.Logic.Registars;
@@ -5,7 +6,14 @@ using Monitoring.Postgresql.Providers.Implementations;
 using Monitoring.Postgresql.Providers.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
+var conf = builder.Configuration;
 builder.Services.RegisterDbServices();
+
+builder.Services.AddSwaggerGen();
+
+builder.Services.RegisterOptions(conf);
+builder.Services.RegisterProvider();
+
 builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddTransient<IUserProvider, UserProvider>();
 
