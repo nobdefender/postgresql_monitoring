@@ -3,16 +3,17 @@ import noop from 'lodash-es/noop';
 import { PropsWithChildren, createContext, useContext, useState } from 'react';
 
 type AuthenticationContextValue = {
-  user?: User;
-  setUser: (value?: User) => void;
+  user: User | null;
+  setUser: (value: User | null) => void;
 };
 
 const AuthenticationContext = createContext<AuthenticationContextValue>({
+  user: null,
   setUser: noop,
 });
 
 export const AuthenticationContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
-  const [user, setUser] = useState<User>();
+  const [user, setUser] = useState<User | null>(null);
   return (
     <AuthenticationContext.Provider
       value={{

@@ -1,8 +1,31 @@
 import { Divider } from '@mantine/core';
-import { Button, Flex, Paper, PasswordInput, TextInput, Title } from '@mantine/core';
+import { Button, Flex, Paper, PasswordInput, TextInput, Title, Text } from '@mantine/core';
 import Logo128 from '@/public/logo_128.svg';
+import { useForm } from '@mantine/form';
+import { LoginCredentials } from '../types';
+import { useLogin } from '@/lib/auth';
+import { useNavigate } from 'react-router-dom';
+import { useAuthenticationContext } from '@/providers/Authentication.context';
+import isNil from 'lodash-es/isNil';
+import { useEffect } from 'react';
 
 export const LoginPage: React.FC = () => {
+  const login = useLogin();
+  const navigate = useNavigate();
+  const form = useForm({
+    initialValues: {
+      username: '',
+      password: '',
+    } as LoginCredentials,
+  });
+  const { user } = useAuthenticationContext();
+
+  useEffect(() => {
+    if (!isNil(user)) {
+      navigate('/main');
+    }
+  }, []);
+
   return (
     <Flex bgsz="contain" bg="url(https://synergy.ru/assets/upload/news/academy/task1.jpg)" h="100%">
       <Paper w={500} h="100%" radius={0} p={30}>
@@ -13,18 +36,18 @@ export const LoginPage: React.FC = () => {
           Мониторинг PostgreSQL
         </Title>
         <form
-        // onSubmit={form.onSubmit(async (values) => {
-        //   await login.mutateAsync(values, {
-        //     onSuccess: () => navigate('/tasks'),
-        //   });
-        // })}
+          onSubmit={form.onSubmit(async (values) => {
+            await login.mutateAsync(values, {
+              onSuccess: () => navigate('/main'),
+            });
+          })}
         >
           <TextInput
             label="Логин"
             placeholder="Введите почту"
             size="md"
             autoComplete="on"
-            // {...form.getInputProps('username')}
+            {...form.getInputProps('username')}
           />
           <PasswordInput
             label="Пароль"
@@ -32,13 +55,13 @@ export const LoginPage: React.FC = () => {
             mt="md"
             size="md"
             autoComplete="on"
-            // {...form.getInputProps('password')}
+            {...form.getInputProps('password')}
           />
           <Button fullWidth mt="xl" size="md" type="submit">
             Войти
           </Button>
-          {/* {login.data === null && (
-            <Text pt="sm"  color="red">
+          {/* {login.data == null && (
+            <Text pt="sm" c="red">
               Неверная комбинация логина и пароля
             </Text>
           )} */}
