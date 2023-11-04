@@ -23,7 +23,6 @@ public class UserActionController : BaseController
         return await Execute(_userActionProvider.Save(zabbixRequestModel, cancellationToken));
     }
 
-
     [SwaggerResponse(200, Type = typeof(bool))]
     [Route("api/UserAction/CheckSelect")]
     [HttpPost]
@@ -34,5 +33,12 @@ public class UserActionController : BaseController
             var res = await _userActionProvider.CheckSelect(userActionModel, cancellationToken);
             return res ? 1 : 0;
         });
+    }
+
+    [Route("api/UserAction/HealthCheck")]
+    [HttpGet]
+    public async Task<IActionResult> HealthCheck(CancellationToken cancellationToken)
+    {
+        return Ok(1);
     }
 }

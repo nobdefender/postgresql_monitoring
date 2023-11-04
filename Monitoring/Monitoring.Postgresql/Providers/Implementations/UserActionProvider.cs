@@ -102,6 +102,7 @@ public class UserActionProvider : IUserActionProvider
             .AsNoTracking()
             .Include(x => x.TelegramBotUserDbModel)
             .Include(x => x.ActionDbModel)
+            .Where(x => x.IsDeleted == false)
             .GroupBy(x => x.TelegramBotUserDbModel.TelegramChatId)
             .ToArrayAsync(cancellationToken);
 
