@@ -5,7 +5,7 @@ import { UseQueryOptions, useQuery } from '@tanstack/react-query';
 import { Action } from '../../types';
 
 export const getAllActions = (): Promise<Action[]> => {
-  return axios.get('/action/allTelegramBotUsersActions');
+  return axios.get('/action/allActions');
 };
 
 type QueryFnType = typeof getAllActions;
