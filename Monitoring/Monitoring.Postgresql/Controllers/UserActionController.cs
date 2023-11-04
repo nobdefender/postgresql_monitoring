@@ -8,10 +8,9 @@ namespace Monitoring.Postgresql.Controllers;
 
 public class UserActionController : BaseController
 {
-    private readonly UserActionProvider _userActionProvider;
+    private readonly IUserActionProvider _userActionProvider;
 
-    //TODO: add Interface
-    public UserActionController(ILogger<UserActionController> logger, UserActionProvider userActionProvider) : base(logger)
+    public UserActionController(ILogger<UserActionController> logger, IUserActionProvider userActionProvider) : base(logger)
     {
         _userActionProvider = userActionProvider;
     }

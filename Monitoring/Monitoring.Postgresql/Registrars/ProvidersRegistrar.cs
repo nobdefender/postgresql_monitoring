@@ -11,8 +11,7 @@ public static class ProvidersRegistrar
         var appSettingsOptions = configuration.Get<AppSettingsOptions>();
         services.AddSingleton(x => new TelegramBotClient(appSettingsOptions.AppSettings.TelegramBotToken));
 
-        services.AddTransient<UserActionProvider>();
-        //services.AddTransient<BotProvider>();
+        services.AddTransient<IUserActionProvider, UserActionProvider>();
 
         return services;
     }

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using Monitoring.Posgresql.Infrastructure;
 using Monitoring.Postgresql.Models.Action;
 using Monitoring.Postgresql.Providers.Interfaces;

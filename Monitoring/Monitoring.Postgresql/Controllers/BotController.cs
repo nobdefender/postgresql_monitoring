@@ -2,7 +2,6 @@
 using Monitoring.Postgresql.Providers.Implementations;
 using Telegram.Bot;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Monitoring.Postgresql.Controllers
 {
@@ -12,38 +11,34 @@ namespace Monitoring.Postgresql.Controllers
     public class BotController : ControllerBase
     {
         private readonly TelegramBotClient _telegramBotClient;
-        private readonly UserActionProvider _userActionProvider;
+        private readonly IUserActionProvider _userActionProvider;
 
-        public BotController(TelegramBotClient telegramBotClient, UserActionProvider userActionProvider)
+        public BotController(TelegramBotClient telegramBotClient, IUserActionProvider userActionProvider)
         {
             _telegramBotClient = telegramBotClient;
             _userActionProvider = userActionProvider;
         }
 
-        private readonly InlineKeyboardMarkup buttons = new InlineKeyboardMarkup(new[]
-            {
-                new[]
-                {
-                    InlineKeyboardButton.WithCallbackData("Статистика", "сommand_stat"),
-                }
-            });
-
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Update update, CancellationToken cancellationToken)
         {
-            var tgClient = _telegramBotClient;
-
             if (update.Type == Telegram.Bot.Types.Enums.UpdateType.Message)
             {
                 if (update.Message?.Text == "/start")
                 {
-                    await tgClient.SendTextMessageAsync(update.Message.From.Id, "comands", replyMarkup: buttons);
+                    await _telegramBotClient.SendTextMessageAsync(update.Message.From.Id, "start");
                     return Ok();
                 }
 
-                if (update.Message?.Text == "/get_chat_id" || update.Message?.Text == "/getid")
+                if (new[] { "/get_chat_id", "/getid" }.Contains(update.Message?.Text))
                 {
-                    await tgClient.SendTextMessageAsync(update.Message.Chat.Id, $"{update.Message.Chat.Id}");
+                    await _telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id, $"{update.Message.Chat.Id}");
+                    return Ok();
+                }
+
+                if (update.Message?.Text == "/end")
+                {
+                    await _telegramBotClient.SendTextMessageAsync(update.Message.From.Id, "end");
                     return Ok();
                 }
             }
@@ -56,17 +51,9 @@ namespace Monitoring.Postgresql.Controllers
 
                     return Ok();
                 }
-
-                if (update.CallbackQuery?.Data == "сommand_stat")
-                {
-                    await tgClient.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, "stat");
-
-                    return Ok();
-                }
             }
 
-            return Ok();
-            //return BadRequest();
+            return BadRequest();
         }
 
         [HttpGet]

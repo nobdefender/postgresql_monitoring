@@ -14,8 +14,6 @@ namespace Monitoring.Postgresql.Providers.Implementations;
 
 public class UserActionProvider : IUserActionProvider
 {
-    //TODO: add interface
-
     private readonly IMongoCollection<UserActionDbModel> _userActionCollection;
     private readonly MonitoringServiceDbContext _monitoringServiceDbContext;
     private readonly TelegramBotClient _telegramBotClient;
@@ -56,7 +54,7 @@ public class UserActionProvider : IUserActionProvider
 
     public async Task<bool> CheckSelect(UserActionRequestModel userActionRequestModel, CancellationToken cancellationToken)
     {
-        await _lockGetSelect.WaitAsync();
+        await _lockGetSelect.WaitAsync(cancellationToken);
         try
         {
 
@@ -74,7 +72,7 @@ public class UserActionProvider : IUserActionProvider
                 return false;
             }
 
-            await _userActionCollection.DeleteManyAsync(Builders<UserActionDbModel>.Filter.Eq(x => x.Hash, selectedUserActions.Hash));
+            await _userActionCollection.DeleteManyAsync(Builders<UserActionDbModel>.Filter.Eq(x => x.Hash, selectedUserActions.Hash), cancellationToken: cancellationToken);
 
             return true;
         }
@@ -99,13 +97,15 @@ public class UserActionProvider : IUserActionProvider
 
         var userToActionByUserId = await _monitoringServiceDbContext.UserToAction
             .AsNoTracking()
+            .Include(x => x.UserDbModel)
+            .Include(x => x.ActionDbModel)
             .Where(x => userActionNames.Contains(x.ActionDbModel.Name))
             .GroupBy(x => x.UserDbModel.TelegramChatId)
             .ToArrayAsync(cancellationToken);
 
         foreach (var userToActionItem in userToActionByUserId)
         {
-            var currentUserActionNames = userToActionItem.Select(x => x.UserDbModel.Name);
+            var currentUserActionNames = userToActionItem.Select(x => x.ActionDbModel.Name);
             var currentActions = userActionDbModels.Where(x => currentUserActionNames.Contains(x.ActionName));
 
             if (!currentActions.Any())
@@ -122,7 +122,6 @@ public class UserActionProvider : IUserActionProvider
     private static long GetHash(UserActionDbModel userActionModel)
     {
         string fullStr = (userActionModel.ActionName.ToString())
-            //+ (userActionModel.ButtonName.ToString())
             + (string.Join("", userActionModel.ActionParams))
             ;
 

@@ -10,13 +10,10 @@ namespace Monitoring.Postgresql.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<int>(
-                name: "ActiondId",
-                table: "UserToAction",
-                type: "integer",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "text");
+            migrationBuilder.Sql(@"
+
+                ALTER TABLE public.""UserToAction"" ALTER COLUMN ""ActiondId"" TYPE integer USING (""ActiondId""::integer);
+            ");
 
             migrationBuilder.AddColumn<long>(
                 name: "TelegramChatId",
