@@ -34,6 +34,7 @@ services:
       - "DOTNET_ENVIRONMENT=${DOTNET_ENVIRONMENT}"
       - "ConnectionStrings__MonitoringServiceConnectionString=Host=app-postgres;Username=docker;Password=docker;Database=MonitoringService;Pooling=true"
       - "UserAction__MongoConnectionString=mongodb://app-mongodb/MonitoringTest"
+      - "AppSettings__TelegramBotToken=${TELEGRAM_TOKEN}"
     networks:
       - default
       
