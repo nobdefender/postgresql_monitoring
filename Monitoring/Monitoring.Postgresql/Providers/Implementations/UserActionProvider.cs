@@ -47,7 +47,10 @@ public class UserActionProvider : IUserActionProvider
             IsUpsert = true
         });
 
-        await _userActionCollection.BulkWriteAsync(upsertOperations, cancellationToken: cancellationToken);
+        if (upsertOperations.Any())
+        {
+            await _userActionCollection.BulkWriteAsync(upsertOperations, cancellationToken: cancellationToken);
+        }
 
         await SendMessage(userActionDbModels, zabbixRequestModel.Message, cancellationToken);
     }
@@ -99,7 +102,6 @@ public class UserActionProvider : IUserActionProvider
             .AsNoTracking()
             .Include(x => x.UserDbModel)
             .Include(x => x.ActionDbModel)
-            .Where(x => userActionNames.Contains(x.ActionDbModel.Name))
             .GroupBy(x => x.UserDbModel.TelegramChatId)
             .ToArrayAsync(cancellationToken);
 
@@ -107,12 +109,6 @@ public class UserActionProvider : IUserActionProvider
         {
             var currentUserActionNames = userToActionItem.Select(x => x.ActionDbModel.Name);
             var currentActions = userActionDbModels.Where(x => currentUserActionNames.Contains(x.ActionName));
-
-            if (!currentActions.Any())
-            {
-                continue;
-            }
-
             var userActionButtons = currentActions.Select(x => new[] { InlineKeyboardButton.WithCallbackData(x.ButtonName, $"UserAction_{x.Hash}") });
 
             await _telegramBotClient.SendTextMessageAsync(new Telegram.Bot.Types.ChatId(userToActionItem.Key), message, replyMarkup: new InlineKeyboardMarkup(userActionButtons), cancellationToken: cancellationToken);
