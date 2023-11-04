@@ -4,5 +4,5 @@ public class UpdateUserActionsDTO
 {
     public int UserId { get; set; }
     
-    public IEnumerable<string> ActionIds { get; set; }
+    public IEnumerable<int> ActionIds { get; set; }
 }
