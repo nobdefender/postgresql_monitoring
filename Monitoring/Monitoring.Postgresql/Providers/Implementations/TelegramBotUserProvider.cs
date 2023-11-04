@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Monitoring.Posgresql.Infrastructure;
 using Monitoring.Posgresql.Infrastructure.Models.TelegramBot;
 using Monitoring.Postgresql.Providers.Interfaces;
