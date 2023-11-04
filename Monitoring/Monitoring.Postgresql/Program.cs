@@ -7,7 +7,6 @@ using Monitoring.Postgresql.Providers.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Monitoring.Postgresql.Extensions;
-using Monitoring.Postgresql.Logic.Registrars;
 using Monitoring.Posgresql.Infrastructure.Extensions;
 using Monitoring.Posgresql.Infrastructure.Models.TelegramBot;
 

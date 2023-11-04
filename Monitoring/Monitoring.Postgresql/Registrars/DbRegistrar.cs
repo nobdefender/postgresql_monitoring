@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Monitoring.Posgresql.Infrastructure;
 
-namespace Monitoring.Postgresql.Logic.Registrars;
+namespace Monitoring.Postgresql.Registrars;
 
 public static class DbRegistrar
 {

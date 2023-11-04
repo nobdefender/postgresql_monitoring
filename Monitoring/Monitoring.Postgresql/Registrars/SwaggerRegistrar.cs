@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using Microsoft.OpenApi.Models;
 
-namespace Monitoring.Postgresql.Logic.Registrars;
+namespace Monitoring.Postgresql.Registrars;
 
 public static class SwaggerRegistrar
 {
