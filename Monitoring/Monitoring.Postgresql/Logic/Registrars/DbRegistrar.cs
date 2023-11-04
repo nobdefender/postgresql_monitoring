@@ -16,6 +16,9 @@ public static class DbRegistrar
             options.UseNpgsql("name=ConnectionStrings:MonitoringServiceConnectionString",
                 b => b.MigrationsAssembly("Monitoring.Postgresql"));
             options.EnableSensitiveDataLogging(true);
-        });
+        },
+        contextLifetime: ServiceLifetime.Transient,
+        optionsLifetime: ServiceLifetime.Singleton
+        );
     }
 }

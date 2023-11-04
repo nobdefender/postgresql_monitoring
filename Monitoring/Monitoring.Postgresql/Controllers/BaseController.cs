@@ -6,7 +6,7 @@ namespace Monitoring.Postgresql.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+//[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class BaseController : ControllerBase
 {
     protected readonly ILogger _logger;

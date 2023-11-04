@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Monitoring.Postgresql.Extensions;
 using Monitoring.Postgresql.Logic.Registrars;
+using Monitoring.Posgresql.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 var conf = builder.Configuration;
@@ -18,6 +19,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.RegisterOptions(conf);
 builder.Services.RegisterProvider(conf);
 builder.Services.RegisterMapper();
+builder.Services.RegisterMongo();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllHeaders",

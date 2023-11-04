@@ -8,8 +8,11 @@ public static class ProvidersRegistrar
 {
     public static IServiceCollection RegisterProvider(this IServiceCollection services, IConfiguration configuration)
     {
-        var appSettingsOptions =  configuration.Get<AppSettingsOptions>();
+        var appSettingsOptions = configuration.Get<AppSettingsOptions>();
         services.AddSingleton(x => new TelegramBotClient(appSettingsOptions.AppSettings.TelegramBotToken));
+
+        services.AddTransient<UserActionProvider>();
+        //services.AddTransient<BotProvider>();
 
         return services;
     }

@@ -21,13 +21,15 @@ public class UserActionController : BaseController
     [HttpPost]
     public async Task<IActionResult> PushUserAction([FromBody] ZabbixRequestModel zabbixRequestModel, CancellationToken cancellationToken)
     {
-        return await Execute(_userActionProvider.SaveUserAction(zabbixRequestModel, cancellationToken));
+        return await Execute(_userActionProvider.Save(zabbixRequestModel, cancellationToken));
     }
 
-    [Route("api/UserAction/Push")]
+
+    [SwaggerResponse(200, Type = typeof(bool))]
+    [Route("api/UserAction/CheckSelect")]
     [HttpPost]
-    public async Task<bool> GetUserAction([FromBody] UserActionRequestModel userActionModel, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetUserAction([FromBody] UserActionRequestModel userActionModel, CancellationToken cancellationToken)
     {
-        return await Execute(async () => await _userActionProvider.GetUserAction(userActionModel, cancellationToken));
+        return await Execute(async () => await _userActionProvider.GetSelect(userActionModel, cancellationToken));
     }
 }

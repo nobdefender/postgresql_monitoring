@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using Monitoring.Posgresql.Infrastructure;
 using Monitoring.Posgresql.Infrastructure.Extensions;
 using Monitoring.Posgresql.Infrastructure.Mongo;
 using Monitoring.Postgresql.Models;
 using Monitoring.Postgresql.Options;
+using Telegram.Bot;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Monitoring.Postgresql.Providers.Implementations;
 
@@ -13,30 +16,24 @@ public class UserActionProvider : IUserActionProvider
     //TODO: add interface
 
     private readonly IMongoCollection<UserActionDbModel> _userActionCollection;
-    private readonly BotProvider _botProvider;
+    private readonly MonitoringServiceDbContext _monitoringServiceDbContext;
+    private readonly TelegramBotClient _telegramBotClient;
     private readonly IMapper _mapper;
 
+    private static SemaphoreSlim _lockGetSelect = new SemaphoreSlim(1, 1);
+
     public UserActionProvider(IMongoFactory mongoFactory, IOptions<UserActionOptions> userActionOptions, IMapper mapper,
-        BotProvider botProvider)
+        MonitoringServiceDbContext monitoringServiceDbContext, TelegramBotClient telegramBotClient)
     {
         var db = mongoFactory.GetDatabase(userActionOptions.Value.UserAction.MongoConnectionString);
         _userActionCollection = db.GetCollection<UserActionDbModel>("UserActionModel");
 
         _mapper = mapper;
-        _botProvider = botProvider;
+        _monitoringServiceDbContext = monitoringServiceDbContext;
+        _telegramBotClient = telegramBotClient;
     }
 
-    private static long GetHash(UserActionDbModel userActionModel)
-    {
-        string fullStr = (userActionModel.ActionName.ToString())
-            //+ (userActionModel.ButtonName.ToString())
-            + (string.Join("", userActionModel.ActionParams))
-            ;
-
-        return fullStr.CalculateHash();
-    }
-
-    public async Task SaveUserAction(ZabbixRequestModel zabbixRequestModel, CancellationToken cancellationToken)
+    public async Task Save(ZabbixRequestModel zabbixRequestModel, CancellationToken cancellationToken)
     {
         var userActionDbModels = _mapper.Map<UserActionDbModel[]>(zabbixRequestModel.userActionModels);
 
@@ -55,27 +52,75 @@ public class UserActionProvider : IUserActionProvider
 
         await _userActionCollection.BulkWriteAsync(upsertOperations, cancellationToken: cancellationToken);
 
-        await _botProvider.SendUserActionMessage(userActionDbModels, cancellationToken);
+        await SendMessage(userActionDbModels, zabbixRequestModel.Message, cancellationToken);
     }
 
-    public async Task<bool> GetUserAction(UserActionRequestModel userActionRequestModel, CancellationToken cancellationToken)
+    public async Task<bool> GetSelect(UserActionRequestModel userActionRequestModel, CancellationToken cancellationToken)
     {
-        var userActionDbModel = _mapper.Map<UserActionDbModel>(userActionRequestModel);
-
-        var hash = GetHash(userActionDbModel);
-
-        var selectedUserActions = await _userActionCollection.Find(Builders<UserActionDbModel>.Filter.And(
-            Builders<UserActionDbModel>.Filter.Eq(x => x.Hash, hash),
-            Builders<UserActionDbModel>.Filter.Eq(x => x.IsSelected, true))
-            ).FirstOrDefaultAsync(cancellationToken);
-
-        if (selectedUserActions == null)
+        await _lockGetSelect.WaitAsync();
+        try
         {
-            return false;
+
+            var userActionDbModel = _mapper.Map<UserActionDbModel>(userActionRequestModel);
+
+            var hash = GetHash(userActionDbModel);
+
+            var selectedUserActions = await _userActionCollection.Find(Builders<UserActionDbModel>.Filter.And(
+                Builders<UserActionDbModel>.Filter.Eq(x => x.Hash, hash),
+                Builders<UserActionDbModel>.Filter.Eq(x => x.IsSelected, true))
+                ).FirstOrDefaultAsync(cancellationToken);
+
+            if (selectedUserActions == null)
+            {
+                return false;
+            }
+
+            await _userActionCollection.DeleteManyAsync(Builders<UserActionDbModel>.Filter.Eq(x => x.Hash, selectedUserActions.Hash));
+
+            return true;
         }
+        finally
+        {
+            _lockGetSelect.Release();
+        }
+    }
 
-        await _userActionCollection.DeleteManyAsync(Builders<UserActionDbModel>.Filter.Eq(x => x.Hash, selectedUserActions.Hash));
+    public async Task Select(string callbackData, CancellationToken cancellationToken)
+    {
+        var userActionHash = long.Parse(callbackData.Split('_').Last());
 
-        return true;
+        await _userActionCollection.UpdateOneAsync(x => x.Hash == userActionHash,
+            Builders<UserActionDbModel>.Update.Set(y => y.IsSelected, true),
+            cancellationToken: cancellationToken);
+    }
+
+    private async Task SendMessage(UserActionDbModel[] userActionDbModels, string message, CancellationToken cancellationToken)
+    {
+        //var userActionName = userActionDbModels.Select(x => x.ActionName);
+
+        //var actions = _monitoringServiceDbContext.Actions.Where(x => userActionName.Contains(x.Name));
+
+        //if (!actions.Any())
+        //{
+        //    return;
+        //}
+
+        long[] chatIds = new[] { 1458662165l };
+
+        var userActionButtons = userActionDbModels.Select(x => new[] { InlineKeyboardButton.WithCallbackData(x.ButtonName, $"UserAction_{x.Hash}") });
+
+        await Task.WhenAll(chatIds.Select(x =>
+            _telegramBotClient.SendTextMessageAsync(new Telegram.Bot.Types.ChatId(x), message, replyMarkup: new InlineKeyboardMarkup(userActionButtons))
+        ));
+    }
+
+    private static long GetHash(UserActionDbModel userActionModel)
+    {
+        string fullStr = (userActionModel.ActionName.ToString())
+            //+ (userActionModel.ButtonName.ToString())
+            + (string.Join("", userActionModel.ActionParams))
+            ;
+
+        return fullStr.CalculateHash();
     }
 }
