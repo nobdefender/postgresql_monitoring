@@ -31,7 +31,7 @@ public class ActionProvider : IActionProvider
         return Task.FromResult(actions.Select(_mapper.Map<ActionDTO>));
     }
 
-    public async Task UpdateUserActionsAsync(UpdateUserActionsDTO dto, CancellationToken cancellationToken)
+    public async Task UpdateTelegramBotUserActionsAsync(UpdateUserActionsDTO dto, CancellationToken cancellationToken)
     {
         var actions = _monitoringServiceDbContext.TelegramBotUserToAction
             .Where(x => x.TelegramBotUserId == dto.UserId && !x.IsDeleted.HasValue).ToList();

@@ -14,6 +14,9 @@ public static class ProvidersRegistrar
 
         services.AddTransient<IUserActionProvider, UserActionProvider>();
         services.AddTransient<ITelegramBotUserProvider, TelegramBotUserProvider>();
+        services.AddTransient<IWebUserProvider, WebWebUserProvider>();
+        services.AddTransient<IActionProvider, ActionProvider>();
+        services.AddTransient<ITelegramBotUserProvider, TelegramBotUserProvider>();
 
         return services;
     }

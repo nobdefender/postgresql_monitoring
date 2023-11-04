@@ -11,7 +11,7 @@ public class ActionController : BaseController
 {
     private readonly IActionProvider _actionProvider;
 
-    public ActionController(ILogger<UserController> logger, IActionProvider actionProvider) : base(logger)
+    public ActionController(ILogger<WebUserController> logger, IActionProvider actionProvider) : base(logger)
     {
         _actionProvider = actionProvider;
     }
@@ -71,8 +71,8 @@ public class ActionController : BaseController
     /// <param name="cancellationToken"></param>
     /// <returns>Список доступных действий</returns>
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [HttpPut(nameof(UpdateUserActions))]
-    public async Task<IResult> UpdateUserActions([FromBody] UpdateUserActionsDTO? dto,
+    [HttpPut(nameof(UpdateTelegramBotUserActions))]
+    public async Task<IResult> UpdateTelegramBotUserActions([FromBody] UpdateUserActionsDTO? dto,
         CancellationToken cancellationToken)
     {
         try
@@ -82,7 +82,7 @@ public class ActionController : BaseController
                 return Results.BadRequest("Неправильные параметры запроса");
             }
 
-            await _actionProvider.UpdateUserActionsAsync(dto, cancellationToken);
+            await _actionProvider.UpdateTelegramBotUserActionsAsync(dto, cancellationToken);
             return Results.Ok();
         }
         catch (Exception e)
