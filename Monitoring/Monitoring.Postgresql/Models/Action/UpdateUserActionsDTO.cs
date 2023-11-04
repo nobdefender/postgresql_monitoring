@@ -2,7 +2,7 @@
 
 public class UpdateUserActionsDTO
 {
-    public int UserId { get; set; }
+    public int TelegramBotUserId { get; set; }
     
     public IEnumerable<int> ActionIds { get; set; }
 }

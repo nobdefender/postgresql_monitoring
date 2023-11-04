@@ -1,4 +1,4 @@
-export type User = {
+export type WebUser = {
   id: number;
   emailAddress: string;
   name: string;
@@ -7,9 +7,9 @@ export type User = {
   role: string;
 };
 
-export type UserResponse = {
+export type WebUserResponse = {
   jwt: string;
-  user: User;
+  user: WebUser;
 };
 
 export type RegisterCommand = {
@@ -29,5 +29,5 @@ export type AuthTokens = {
 };
 
 export type UserLoginResponse = AuthTokens & {
-  user: User;
+  webUser: WebUser;
 };

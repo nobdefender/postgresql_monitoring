@@ -1,29 +1,29 @@
 import { Box, Flex, Paper, Text, Checkbox, Stack, Button } from '@mantine/core';
 import { useAllActions } from '../api/action/allActions';
 import { useEffect, useState } from 'react';
-import { Action } from '../types';
+import { Action, TelegramBotUser } from '../types';
 import { useUserActions } from '../api/action/userActions';
-import { User } from '@/features/login-page/types';
+import { WebUser } from '@/features/login-page/types';
 import isNil from 'lodash-es/isNil';
 import orderBy from 'lodash-es/orderBy';
 import find from 'lodash-es/find';
 import { useUpdateUserActions } from '../api/action/updateUserActions';
 
 type AccessBlockProps = {
-  user?: User;
+  telegramUser?: TelegramBotUser;
 };
 
-export const AccessBlock: React.FC<AccessBlockProps> = ({ user }) => {
+export const AccessBlock: React.FC<AccessBlockProps> = ({ telegramUser }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [localUserActions, setLocalUserActions] = useState<(Action & { isSelected: boolean })[]>();
 
   const { data: allActions } = useAllActions();
   const { data: userActions } = useUserActions({
     request: {
-      userId: user?.id as number,
+      userId: telegramUser?.id as number,
     },
     config: {
-      enabled: !isNil(user?.id),
+      enabled: !isNil(telegramUser?.id),
     },
   });
 
@@ -69,12 +69,13 @@ export const AccessBlock: React.FC<AccessBlockProps> = ({ user }) => {
         <Flex justify="flex-end">
           <Button
             w={140}
+            disabled={isNil(telegramUser?.id)}
             variant={isEditing ? 'outline' : 'filled'}
             onClick={() =>
               setIsEditing((prev) => {
                 if (prev) {
                   updateUserActions({
-                    userId: user?.id as number,
+                    telegramBotUserId: telegramUser?.id as number,
                     actionIds:
                       localUserActions
                         ?.filter(({ isSelected }) => isSelected)

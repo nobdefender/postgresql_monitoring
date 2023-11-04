@@ -36,9 +36,9 @@ export const AppRoutes = () => {
             }
           />
           <Route path="*" element={<Navigate to="/main" replace />} />
-          {isNil(storage.getToken('accessToken')) && (
+          {/* {isNil(storage.getToken('accessToken')) && (
             <Route path="*" element={<Navigate to="/login" replace />} />
-          )}
+          )} */}
         </Routes>
       </LayoutBody>
     </>

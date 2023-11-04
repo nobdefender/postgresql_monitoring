@@ -1,5 +1,5 @@
 import axios from "axios";
-import { UserResponse } from "../types";
+import { WebUserResponse } from "../types";
 
 export type RegisterCredentials = {
   email: string;
@@ -10,6 +10,6 @@ export type RegisterCredentials = {
 
 export const registerWithEmailAndPassword = (
   data: RegisterCredentials
-): Promise<UserResponse> => {
+): Promise<WebUserResponse> => {
   return axios.post("/auth/register", data);
 };

@@ -10,6 +10,11 @@ export type Action = {
 };
 
 export type UpdateUserActionsRequest = {
-    userId: number;
-    actionIds: string[];
-}
+  telegramBotUserId: number;
+  actionIds: string[];
+};
+
+export type TelegramBotUser = {
+  id: number;
+  telegramChatId: number;
+};

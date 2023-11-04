@@ -2,10 +2,11 @@ import { Center, Flex, Stack, Title } from '@mantine/core';
 import { UserBlock } from './UserBlock';
 import { AccessBlock } from './AccessBlock';
 import { useState } from 'react';
-import { User } from '@/features/login-page/types';
+import { WebUser } from '@/features/login-page/types';
+import { TelegramBotUser } from '../types';
 
 export const MainPage: React.FC = () => {
-  const [user, setUser] = useState<User>();
+  const [telegramUser, setTelegramUser] = useState<TelegramBotUser>();
 
   return (
     <Stack gap="lg">
@@ -14,8 +15,8 @@ export const MainPage: React.FC = () => {
       </Center>
       <Center>
         <Flex mt={20} w="min-content" gap="xl">
-          <UserBlock user={user} setUser={setUser} />
-          <AccessBlock user={user} />
+          <UserBlock telegramUser={telegramUser} setTelegramUser={setTelegramUser} />
+          <AccessBlock telegramUser={telegramUser} />
         </Flex>
       </Center>
     </Stack>
