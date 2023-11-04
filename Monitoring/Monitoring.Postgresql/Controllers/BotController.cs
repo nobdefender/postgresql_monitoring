@@ -60,7 +60,7 @@ public class BotController : ControllerBase
             }
         }
 
-        return BadRequest();
+        return Ok();
     }
 
     [HttpGet]
