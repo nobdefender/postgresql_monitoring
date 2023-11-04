@@ -10,7 +10,11 @@ public static class MapperRegistrar
     /// <param name="services">Коллекция дескрипторов сервисов.</param>
     public static IServiceCollection RegisterMapper(this IServiceCollection services)
     {
-        services.AddAutoMapper(srv => { srv.AddProfile<DbModelsToDTOModels>(); });
+        services.AddAutoMapper(srv =>
+        {
+            srv.AddProfile<DbModelsToDTOModelsMapping>();
+            srv.AddProfile<UserActionRequestModelToUserActionDbModelMapping>();
+        });
 
         return services;
     }

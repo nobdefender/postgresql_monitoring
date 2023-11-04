@@ -6,11 +6,11 @@ using Monitoring.Postgresql.Models;
 using Monitoring.Postgresql.Models.Action;
 using Monitoring.Postgresql.Models.Auth;
 
-namespace Monitoring.Postgresql.Mappers;
+namespace Monitoring.Postgresql.Mappings;
 
-public class DbModelsToDTOModels : Profile
+public class DbModelsToDTOModelsMapping : Profile
 {
-    public DbModelsToDTOModels()
+    public DbModelsToDTOModelsMapping()
     {
         CreateMap<UserDbModel, UpsertUserDTO>()
             .ReverseMap()

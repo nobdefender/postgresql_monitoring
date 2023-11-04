@@ -8,10 +8,9 @@ namespace Monitoring.Postgresql.Controllers;
 
 public class UserActionController : BaseController
 {
-    private readonly UserActionProvider _userActionProvider;
+    private readonly IUserActionProvider _userActionProvider;
 
-    //TODO: add Interface
-    public UserActionController(ILogger<UserActionController> logger, UserActionProvider userActionProvider) :
+    public UserActionController(ILogger<UserActionController> logger, IUserActionProvider userActionProvider) : base(logger)
         base(logger)
     {
         _userActionProvider = userActionProvider;
@@ -20,17 +19,19 @@ public class UserActionController : BaseController
     [SwaggerRequestExample(typeof(ZabbixRequestModel), typeof(ZabbixRequestModel))]
     [Route("api/UserAction/Push")]
     [HttpPost]
-    public async Task<IActionResult> PushUserAction([FromBody] ZabbixRequestModel zabbixRequestModel,
+    public async Task<IActionResult> Push([FromBody] ZabbixRequestModel zabbixRequestModel, CancellationToken cancellationToken)
         CancellationToken cancellationToken)
     {
-        return await Execute(_userActionProvider.SaveUserAction(zabbixRequestModel, cancellationToken));
+        return await Execute(_userActionProvider.Save(zabbixRequestModel, cancellationToken));
     }
 
-    [Route("api/UserAction/Get")]
+
+    [SwaggerResponse(200, Type = typeof(bool))]
+    [Route("api/UserAction/CheckSelect")]
     [HttpPost]
-    public async Task GetUserAction([FromBody] UserActionRequestModel userActionModel,
+    public async Task<IActionResult> CheckSelect([FromBody] UserActionRequestModel userActionModel, CancellationToken cancellationToken)
         CancellationToken cancellationToken)
     {
-        await Execute(async () => await _userActionProvider.GetUserAction(userActionModel, cancellationToken));
+        return await Execute(async () => await _userActionProvider.CheckSelect(userActionModel, cancellationToken));
     }
 }

@@ -25,9 +25,9 @@ public class ActionProvider : IActionProvider
 
     public Task<IEnumerable<ActionDTO>> GetUserActionsAsync(int userId, CancellationToken cancellationToken)
     {
-        var actionIds = _monitoringServiceDbContext.UserToAction
+        var actionsId = _monitoringServiceDbContext.UserToAction
             .Where(x => x.UserId == userId && !x.IsDeleted.HasValue).Select(x => x.ActiondId).ToList();
-        var actions = _monitoringServiceDbContext.Actions.Where(x => actionIds.Contains(x.Actionid)).ToList();
+        var actions = _monitoringServiceDbContext.Actions.Where(x => actionsId.Contains(x.Id)).ToList();
         return Task.FromResult(actions.Select(_mapper.Map<ActionDTO>));
     }
 

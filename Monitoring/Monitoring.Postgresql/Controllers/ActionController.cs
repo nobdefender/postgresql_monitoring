@@ -7,7 +7,7 @@ using Monitoring.Postgresql.Providers.Interfaces;
 
 namespace Monitoring.Postgresql.Controllers;
 
-public class ActionController : BaseController
+public class ActionController : UserBaseController
 {
     private readonly IActionProvider _actionProvider;
 
