@@ -41,11 +41,4 @@ public class TelegramBotUserProvider : ITelegramBotUserProvider
             await _monitoringServiceDbContext.SaveChangesAsync(cancellationToken);
         }
     }
-
-    public async Task<IEnumerable<TelegramBotUserDbModel>> GetAllTelegramBotUsersAsync(
-      CancellationToken cancellationToken)
-    {
-        var users = _monitoringServiceDbContext.TelegramBotUsers;
-        return await users.ToListAsync(cancellationToken);
-    }
 }
