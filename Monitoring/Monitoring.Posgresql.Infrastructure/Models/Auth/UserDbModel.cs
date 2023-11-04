@@ -1,7 +1,15 @@
-﻿namespace Monitoring.Posgresql.Infrastructure.Models.Auth;
+﻿using Monitoring.Posgresql.Infrastructure.Models.Bindings;
+using System.Text.Json.Serialization;
+
+namespace Monitoring.Posgresql.Infrastructure.Models.Auth;
 
 public class UserDbModel
 {
+    public UserDbModel()
+    {
+        UserToActionDbModels = new List<UserToActionDbModel>();
+    }
+
     /// <summary>
     /// Идентификатор пользователя
     /// </summary>
@@ -51,4 +59,7 @@ public class UserDbModel
     /// Время действия Refresh токена
     /// </summary>
     public DateTime? RefreshTokenExpiryTime { get; set; }
+
+    [JsonIgnore]
+    public List<UserToActionDbModel> UserToActionDbModels { get; set; }
 }

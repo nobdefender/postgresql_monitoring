@@ -1,4 +1,8 @@
-﻿namespace Monitoring.Posgresql.Infrastructure.Models.Bindings;
+﻿using Monitoring.Posgresql.Infrastructure.Models.Access;
+using Monitoring.Posgresql.Infrastructure.Models.Auth;
+using System.Text.Json.Serialization;
+
+namespace Monitoring.Posgresql.Infrastructure.Models.Bindings;
 
 public class UserToActionDbModel
 {
@@ -21,4 +25,11 @@ public class UserToActionDbModel
     /// Удалена ли запись
     /// </summary>
     public bool? IsDeleted { get; set; }
+
+
+    [JsonIgnore]
+    public ActionDbModel ActionDbModel { get; set; }
+
+    [JsonIgnore]
+    public UserDbModel UserDbModel { get; set; }
 }
