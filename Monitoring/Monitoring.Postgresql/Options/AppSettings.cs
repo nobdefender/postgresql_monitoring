@@ -2,10 +2,10 @@
 {
     public class AppSettingsOptions
     {
-        public AppSettings AppSettings { get; set; }
+        public AppSettingsSection AppSettings { get; set; }
     }
 
-    public class AppSettings
+    public class AppSettingsSection
     {
         public string TelegramBotToken { get; set; }
     }

@@ -17,7 +17,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.RegisterOptions(conf);
 builder.Services.RegisterProvider(conf);
-builder.Services.RegisterMapperServices();
+builder.Services.RegisterMapper();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllHeaders",
@@ -72,10 +72,10 @@ if (app.Environment.IsDevelopment())
     );
 }
 
-using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
-{
-    var context = serviceScope.ServiceProvider.GetService<MonitoringServiceDbContext>();
-    context?.Database.Migrate();
-}
+//using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
+//{
+//    var context = serviceScope.ServiceProvider.GetService<MonitoringServiceDbContext>();
+//    context?.Database.Migrate();
+//}
 
 app.Run();

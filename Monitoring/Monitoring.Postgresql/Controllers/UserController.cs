@@ -7,7 +7,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace Monitoring.Postgresql.Controllers;
 
-public class UserController : BaseController
+public class UserController : UserBaseController
 {
     private readonly IUserProvider _userProvider;
 
