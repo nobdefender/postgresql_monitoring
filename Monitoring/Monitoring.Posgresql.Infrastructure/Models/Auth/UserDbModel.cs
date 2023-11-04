@@ -1,7 +1,15 @@
-﻿namespace Monitoring.Posgresql.Infrastructure.Models.Auth;
+﻿using Monitoring.Posgresql.Infrastructure.Models.Bindings;
+using System.Text.Json.Serialization;
+
+namespace Monitoring.Posgresql.Infrastructure.Models.Auth;
 
 public class UserDbModel
 {
+    public UserDbModel()
+    {
+        UserToActionDbModels = new List<UserToActionDbModel>();
+    }
+
     /// <summary>
     /// Идентификатор пользователя
     /// </summary>
@@ -43,7 +51,15 @@ public class UserDbModel
     public string? RefreshToken { get; set; }
 
     /// <summary>
+    /// Id чата телеграм
+    /// </summary>
+    public long TelegramChatId { get; set; }
+
+    /// <summary>
     /// Время действия Refresh токена
     /// </summary>
     public DateTime? RefreshTokenExpiryTime { get; set; }
+
+    [JsonIgnore]
+    public List<UserToActionDbModel> UserToActionDbModels { get; set; }
 }

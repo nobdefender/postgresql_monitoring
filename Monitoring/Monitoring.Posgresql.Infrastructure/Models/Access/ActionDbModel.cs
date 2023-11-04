@@ -1,7 +1,15 @@
-﻿namespace Monitoring.Posgresql.Infrastructure.Models.Access;
+﻿using Monitoring.Posgresql.Infrastructure.Models.Bindings;
+using System.Text.Json.Serialization;
+
+namespace Monitoring.Posgresql.Infrastructure.Models.Access;
 
 public class ActionDbModel
 {
+    public ActionDbModel()
+    {
+        UserToActionDbModels = new List<UserToActionDbModel>();
+    }
+
     /// <summary>
     /// Идентификатор записи
     /// </summary>
@@ -46,4 +54,7 @@ public class ActionDbModel
     /// Notify_if_canceled
     /// </summary>
     public string Pause_symptoms { get; set; }
+
+    [JsonIgnore]
+    public List<UserToActionDbModel>? UserToActionDbModels { get; set; }
 }

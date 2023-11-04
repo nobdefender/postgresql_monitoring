@@ -11,9 +11,7 @@ public class ActionController : BaseController
 {
     private readonly IActionProvider _actionProvider;
 
-    public ActionController(ILogger<UserController> logger,
-        IActionProvider actionProvider)
-        : base(logger)
+    public ActionController(ILogger<UserController> logger, IActionProvider actionProvider) : base(logger)
     {
         _actionProvider = actionProvider;
     }
