@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Monitoring.Posgresql.Infrastructure;
@@ -94,22 +95,28 @@ public class UserActionProvider : IUserActionProvider
 
     private async Task SendMessage(UserActionDbModel[] userActionDbModels, string message, CancellationToken cancellationToken)
     {
-        var userActionName = userActionDbModels.Select(x => x.ActionName);
+        var userActionNames = userActionDbModels.Select(x => x.ActionName);
 
-        var actions = _monitoringServiceDbContext.Actions.Where(x => userActionName.Contains(x.Name));
+        var userToActionByUserId = await _monitoringServiceDbContext.UserToAction
+            .AsNoTracking()
+            .Where(x => userActionNames.Contains(x.ActionDbModel.Name))
+            .GroupBy(x => x.UserDbModel.TelegramChatId)
+            .ToArrayAsync(cancellationToken);
 
-        if (!actions.Any())
+        foreach (var userToActionItem in userToActionByUserId)
         {
-            return;
+            var currentUserActionNames = userToActionItem.Select(x => x.UserDbModel.Name);
+            var currentActions = userActionDbModels.Where(x => currentUserActionNames.Contains(x.ActionName));
+
+            if (!currentActions.Any())
+            {
+                continue;
+            }
+
+            var userActionButtons = currentActions.Select(x => new[] { InlineKeyboardButton.WithCallbackData(x.ButtonName, $"UserAction_{x.Hash}") });
+
+            await _telegramBotClient.SendTextMessageAsync(new Telegram.Bot.Types.ChatId(userToActionItem.Key), message, replyMarkup: new InlineKeyboardMarkup(userActionButtons), cancellationToken: cancellationToken);
         }
-
-        long[] chatIds = new[] { 1458662165l };
-
-        var userActionButtons = userActionDbModels.Select(x => new[] { InlineKeyboardButton.WithCallbackData(x.ButtonName, $"UserAction_{x.Hash}") });
-
-        await Task.WhenAll(chatIds.Select(x =>
-            _telegramBotClient.SendTextMessageAsync(new Telegram.Bot.Types.ChatId(x), message, replyMarkup: new InlineKeyboardMarkup(userActionButtons))
-        ));
     }
 
     private static long GetHash(UserActionDbModel userActionModel)
