@@ -3,7 +3,7 @@
 /// <summary>
 /// Модель добавления/обновления пользователя
 /// </summary>
-public class UpsertUserDTO
+public class UpsertWebUserDTO
 {
     /// <summary>
     /// email адрес

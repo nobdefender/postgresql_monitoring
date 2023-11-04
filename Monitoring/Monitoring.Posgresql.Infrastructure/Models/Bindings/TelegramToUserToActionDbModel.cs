@@ -1,10 +1,10 @@
 ﻿using Monitoring.Posgresql.Infrastructure.Models.Access;
-using Monitoring.Posgresql.Infrastructure.Models.Auth;
 using System.Text.Json.Serialization;
+using Monitoring.Posgresql.Infrastructure.Models.TelegramBot;
 
 namespace Monitoring.Posgresql.Infrastructure.Models.Bindings;
 
-public class UserToActionDbModel
+public class TelegramToUserToActionDbModel
 {
     /// <summary>
     /// Идентификатор записи
@@ -14,7 +14,7 @@ public class UserToActionDbModel
     /// <summary>
     /// Идентификатор пользователя
     /// </summary>
-    public int UserId { get; set; }
+    public int TelegramBotUserId { get; set; }
 
     /// <summary>
     /// Идентификатор действия
@@ -31,5 +31,5 @@ public class UserToActionDbModel
     public ActionDbModel ActionDbModel { get; set; }
 
     [JsonIgnore]
-    public UserDbModel UserDbModel { get; set; }
+    public TelegramBotUserDbModel TelegramBotUserDbModel { get; set; }
 }

@@ -23,18 +23,18 @@ public class ActionProvider : IActionProvider
         return Task.FromResult(actions.Select(_mapper.Map<ActionDTO>));
     }
 
-    public Task<IEnumerable<ActionDTO>> GetUserActionsAsync(int userId, CancellationToken cancellationToken)
+    public Task<IEnumerable<ActionDTO>> GetUserActionsAsync(int telegramBotUserId, CancellationToken cancellationToken)
     {
-        var actionsId = _monitoringServiceDbContext.UserToAction
-            .Where(x => x.UserId == userId && !x.IsDeleted.HasValue).Select(x => x.ActiondId).ToList();
+        var actionsId = _monitoringServiceDbContext.TelegramBotUserToAction
+            .Where(x => x.TelegramBotUserId == telegramBotUserId && !x.IsDeleted.HasValue).Select(x => x.ActiondId).ToList();
         var actions = _monitoringServiceDbContext.Actions.Where(x => actionsId.Contains(x.Id)).ToList();
         return Task.FromResult(actions.Select(_mapper.Map<ActionDTO>));
     }
 
     public async Task UpdateUserActionsAsync(UpdateUserActionsDTO dto, CancellationToken cancellationToken)
     {
-        var actions = _monitoringServiceDbContext.UserToAction
-            .Where(x => x.UserId == dto.UserId && !x.IsDeleted.HasValue).ToList();
+        var actions = _monitoringServiceDbContext.TelegramBotUserToAction
+            .Where(x => x.TelegramBotUserId == dto.UserId && !x.IsDeleted.HasValue).ToList();
         foreach (var action in actions)
         {
             action.IsDeleted = true;
@@ -42,10 +42,10 @@ public class ActionProvider : IActionProvider
 
         foreach (var id in dto.ActionIds)
         {
-            await _monitoringServiceDbContext.UserToAction.AddAsync(new UserToActionDbModel()
+            await _monitoringServiceDbContext.TelegramBotUserToAction.AddAsync(new TelegramToUserToActionDbModel()
             {
                 ActiondId = id,
-                UserId = dto.UserId
+                TelegramBotUserId = dto.UserId
             }, cancellationToken);
         }
 

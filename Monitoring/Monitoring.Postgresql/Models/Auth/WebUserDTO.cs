@@ -3,7 +3,7 @@
 /// <summary>
 /// Модель пользователя сервиса
 /// </summary>
-public class UserDTO
+public class WebUserDTO
 {
     /// <summary>
     /// Идентификатор пользователя

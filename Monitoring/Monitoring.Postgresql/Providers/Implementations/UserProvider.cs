@@ -10,7 +10,8 @@ using Microsoft.IdentityModel.Tokens;
 using Monitoring.Posgresql.Infrastructure;
 using Monitoring.Postgresql.Settings;
 using AutoMapper;
-using Monitoring.Posgresql.Infrastructure.Models.Auth;
+using Monitoring.Posgresql.Infrastructure.Models.TelegramBot;
+using Monitoring.Posgresql.Infrastructure.Models.WebAuth;
 
 namespace Monitoring.Postgresql.Providers.Implementations;
 
@@ -29,16 +30,16 @@ public class UserProvider : IUserProvider
         _monitoringServiceDbContext = monitoringServiceDbContext;
     }
     
-    public Task<IEnumerable<UserDTO>> GetAllUsersAsync(CancellationToken cancellationToken)
+    public Task<IEnumerable<WebUserDTO>> GetAllUsersAsync(CancellationToken cancellationToken)
     {
-        var users = _monitoringServiceDbContext.Users;
-        return Task.FromResult(users.Select(_mapper.Map<UserDTO>));
+        var users = _monitoringServiceDbContext.WebUsers;
+        return Task.FromResult(users.Select(_mapper.Map<WebUserDTO>));
     }
     
     public async Task<IResult> LoginAsync(UserLoginRequest userLoginRequest,
         CancellationToken cancellationToken = default)
     {
-        var existedUser = await _monitoringServiceDbContext.Users.FirstOrDefaultAsync(u => u.Username == userLoginRequest.Username, cancellationToken);
+        var existedUser = await _monitoringServiceDbContext.WebUsers.FirstOrDefaultAsync(u => u.Username == userLoginRequest.Username, cancellationToken);
         if(existedUser == null)
         {
             return Results.NotFound("Пользователь не найден");
@@ -51,7 +52,7 @@ public class UserProvider : IUserProvider
             return Results.BadRequest("Некорректный пароль");
         }
 
-        var userDTO = _mapper.Map<UserDTO>(existedUser);
+        var userDTO = _mapper.Map<WebUserDTO>(existedUser);
         var claims = new[]
         {
             new Claim(ClaimTypes.Name, $"{userDTO?.Id}"),
@@ -71,7 +72,7 @@ public class UserProvider : IUserProvider
 
         return Results.Ok(new UserWithTokenDTO() 
         { 
-            User = userDTO,
+            WebUser = userDTO,
             AccessToken = accessToken,
             RefreshToken = refreshToken
         });
@@ -90,7 +91,7 @@ public class UserProvider : IUserProvider
         var principal = GetPrincipalFromExpiredToken(accessToken);
         var userId = Convert.ToInt32(principal.Identity.Name);
 
-        var user = await _monitoringServiceDbContext.Users.FirstOrDefaultAsync(w => w.Id == userId,
+        var user = await _monitoringServiceDbContext.WebUsers.FirstOrDefaultAsync(w => w.Id == userId,
             cancellationToken: cancellationToken);
         if (user is null)
         {
@@ -121,24 +122,24 @@ public class UserProvider : IUserProvider
         });
     }
 
-    public async Task<UserDTO?> GetById(int? id, CancellationToken cancellationToken = default)
+    public async Task<WebUserDTO?> GetById(int? id, CancellationToken cancellationToken = default)
     {
-        var user = await _monitoringServiceDbContext.Users.FirstOrDefaultAsync(w => w.Id == id,
+        var user = await _monitoringServiceDbContext.WebUsers.FirstOrDefaultAsync(w => w.Id == id,
             cancellationToken: cancellationToken);
-        return user != null ? _mapper.Map<UserDTO>(user) : null;
+        return user != null ? _mapper.Map<WebUserDTO>(user) : null;
     }
     
-    public async Task<IResult> UpsertUserAsync(UpsertUserDTO model, CancellationToken cancellationToken)
+    public async Task<IResult> UpsertUserAsync(UpsertWebUserDTO model, CancellationToken cancellationToken)
     {
-        var dbModel = _mapper.Map<UserDbModel>(model);
+        var dbModel = _mapper.Map<WebUserDbModel>(model);
 
-        var existedUser = await _monitoringServiceDbContext.Users.
+        var existedUser = await _monitoringServiceDbContext.WebUsers.
             AsNoTracking().
             FirstOrDefaultAsync(p => p.EmailAddress == dbModel.EmailAddress, cancellationToken);
 
         if (existedUser is null)
         {
-            await _monitoringServiceDbContext.Users.AddAsync(dbModel, cancellationToken);
+            await _monitoringServiceDbContext.WebUsers.AddAsync(dbModel, cancellationToken);
             await _monitoringServiceDbContext.SaveChangesAsync(cancellationToken);
 
             return Results.Ok();
@@ -155,7 +156,7 @@ public class UserProvider : IUserProvider
 
     public async Task<IResult> SetPasswordAsync(SetPasswordDTO model, CancellationToken cancellationToken)
     {
-        var user = await _monitoringServiceDbContext.Users.
+        var user = await _monitoringServiceDbContext.WebUsers.
             AsNoTracking().
             FirstOrDefaultAsync(p => p.EmailAddress == model.EmailAddress.ToLower(), cancellationToken);
 

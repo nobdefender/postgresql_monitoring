@@ -5,6 +5,6 @@ namespace Monitoring.Postgresql.Providers.Interfaces;
 public interface IActionProvider
 {
     Task<IEnumerable<ActionDTO>> GetAllActionsAsync(CancellationToken cancellationToken = default);
-    Task<IEnumerable<ActionDTO>> GetUserActionsAsync(int userId, CancellationToken cancellationToken = default);
+    Task<IEnumerable<ActionDTO>> GetUserActionsAsync(int telegramBotUserId, CancellationToken cancellationToken = default);
     Task UpdateUserActionsAsync(UpdateUserActionsDTO dto, CancellationToken cancellationToken = default);
 }

@@ -2,16 +2,19 @@
 using Monitoring.Posgresql.Infrastructure.Configurations;
 using Monitoring.Posgresql.Infrastructure.Extensions;
 using Monitoring.Posgresql.Infrastructure.Models.Access;
-using Monitoring.Posgresql.Infrastructure.Models.Auth;
 using Monitoring.Posgresql.Infrastructure.Models.Bindings;
+using Monitoring.Posgresql.Infrastructure.Models.TelegramBot;
+using Monitoring.Posgresql.Infrastructure.Models.WebAuth;
 
 namespace Monitoring.Posgresql.Infrastructure;
 
 public class MonitoringServiceDbContext : DbContext
 {
-    public DbSet<UserDbModel> Users { get; set; } = null!;
+    public DbSet<TelegramBotUserDbModel> TelegramBotUsers { get; set; } = null!;
     public DbSet<ActionDbModel> Actions { get; set; } = null!;
-    public DbSet<UserToActionDbModel> UserToAction { get; set; } = null!;
+    public DbSet<TelegramToUserToActionDbModel> TelegramBotUserToAction { get; set; } = null!;
+    public DbSet<WebUserDbModel> WebUsers { get; set; } = null!;
+    
 
     public MonitoringServiceDbContext(DbContextOptions<MonitoringServiceDbContext> options) : base(options)
     {
@@ -19,9 +22,10 @@ public class MonitoringServiceDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfiguration(new UserDbModelConfiguration());
         modelBuilder.ApplyConfiguration(new ActionDbModelConfiguration());
+        modelBuilder.ApplyConfiguration(new WebUserDbModelConfiguration());
         modelBuilder.ApplyConfiguration(new UserToActionDbModelConfiguration());
+        modelBuilder.ApplyConfiguration(new TelegramBotUserDbModelConfiguration());
         modelBuilder.RemovePluralizingTableNameConvention();
     }
 }

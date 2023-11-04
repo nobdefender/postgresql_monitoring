@@ -98,11 +98,11 @@ public class UserActionProvider : IUserActionProvider
     {
         var userActionNames = userActionDbModels.Select(x => x.ActionName);
 
-        var userToActionByUserId = await _monitoringServiceDbContext.UserToAction
+        var userToActionByUserId = await _monitoringServiceDbContext.TelegramBotUserToAction
             .AsNoTracking()
-            .Include(x => x.UserDbModel)
+            .Include(x => x.TelegramBotUserDbModel)
             .Include(x => x.ActionDbModel)
-            .GroupBy(x => x.UserDbModel.TelegramChatId)
+            .GroupBy(x => x.TelegramBotUserDbModel.TelegramChatId)
             .ToArrayAsync(cancellationToken);
 
         foreach (var userToActionItem in userToActionByUserId)

@@ -90,7 +90,7 @@ public class UserController : UserBaseController
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet("GetUserData")]
-    [SwaggerResponse(200, Type = typeof(UserDTO))]
+    [SwaggerResponse(200, Type = typeof(WebUserDTO))]
     public async Task<IResult> GetUserData([FromQuery] string token,
         CancellationToken cancellationToken)
     {
@@ -120,7 +120,7 @@ public class UserController : UserBaseController
     /// <returns>Список пользователей</returns>
     [Authorize(Roles = "Reviewer")]
     [HttpPost(nameof(Upsert))]
-    public async Task<IResult> Upsert([FromBody] UpsertUserDTO model,
+    public async Task<IResult> Upsert([FromBody] UpsertWebUserDTO model,
         CancellationToken cancellationToken)
     {
         try

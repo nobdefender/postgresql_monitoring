@@ -2,6 +2,6 @@
 {
     public class UserWithTokenDTO: TokenApiModel
     {
-        public UserDTO User { get; set; }
+        public WebUserDTO WebUser { get; set; }
     }
 }

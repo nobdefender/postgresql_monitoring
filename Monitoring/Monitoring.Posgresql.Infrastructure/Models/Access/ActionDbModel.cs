@@ -7,7 +7,7 @@ public class ActionDbModel
 {
     public ActionDbModel()
     {
-        UserToActionDbModels = new List<UserToActionDbModel>();
+        UserToActionDbModels = new List<TelegramToUserToActionDbModel>();
     }
 
     /// <summary>
@@ -56,5 +56,5 @@ public class ActionDbModel
     public string Pause_symptoms { get; set; }
 
     [JsonIgnore]
-    public List<UserToActionDbModel>? UserToActionDbModels { get; set; }
+    public List<TelegramToUserToActionDbModel>? UserToActionDbModels { get; set; }
 }
