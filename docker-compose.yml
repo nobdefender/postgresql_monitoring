@@ -1,0 +1,54 @@
+version: '3.9'
+services:
+  app-postgres:
+    image: postgres:15.4
+    container_name: app-postgres
+    environment:
+      - POSTGRES_USER=docker
+      - POSTGRES_DB=MonitoringService
+      - POSTGRES_PASSWORD=docker
+    ports:
+      - local_port:5432
+    networks:
+      - default
+    restart: unless-stopped
+
+  app-mongodb:
+    image: mongo:7.0.2
+    container_name: app-mongodb
+    ports:
+      - local_port:27017
+    networks:
+      - default
+    restart: unless-stopped
+    
+  app-api:
+    container_name: app-api
+    build:
+      context: ./Monitoring/Monitoring.Postgresql
+      dockerfile: Dockerfile
+    ports:
+      - "5298:5298"
+    restart: unless-stopped
+    environment:
+      - "DOTNET_ENVIRONMENT=${DOTNET_ENVIRONMENT}"
+      - "ConnectionStrings__MonitoringServiceConnectionString=Host=app-postgres;Username=docker;Password=docker;Database=MonitoringService;Pooling=true"
+      - "UserAction__MongoConnectionString=mongodb://app-mongodb/MonitoringTest"
+    networks:
+      - default
+      
+  app-web:
+    container_name: app-web
+    build:
+      context: ./WebAdmin
+      dockerfile: Dockerfile
+    ports:
+      - "8888:80"
+    restart: unless-stopped
+    networks:
+      - default
+
+networks:
+  default:
+    external:
+      name: docker_default
