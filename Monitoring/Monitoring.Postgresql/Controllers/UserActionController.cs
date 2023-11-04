@@ -29,6 +29,10 @@ public class UserActionController : BaseController
     [HttpPost]
     public async Task<IActionResult> CheckSelect([FromBody] UserActionRequestModel userActionModel, CancellationToken cancellationToken)
     {
-        return await Execute(async () => await _userActionProvider.CheckSelect(userActionModel, cancellationToken));
+        return await Execute(async () =>
+        {
+            var res = await _userActionProvider.CheckSelect(userActionModel, cancellationToken);
+            return res ? 1 : 0;
+        });
     }
 }
