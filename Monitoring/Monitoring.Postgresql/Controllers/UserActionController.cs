@@ -11,7 +11,8 @@ public class UserActionController : BaseController
     private readonly UserActionProvider _userActionProvider;
 
     //TODO: add Interface
-    public UserActionController(ILogger<UserActionController> logger, UserActionProvider userActionProvider) : base(logger)
+    public UserActionController(ILogger<UserActionController> logger, UserActionProvider userActionProvider) :
+        base(logger)
     {
         _userActionProvider = userActionProvider;
     }
@@ -19,15 +20,17 @@ public class UserActionController : BaseController
     [SwaggerRequestExample(typeof(ZabbixRequestModel), typeof(ZabbixRequestModel))]
     [Route("api/UserAction/Push")]
     [HttpPost]
-    public async Task<IActionResult> PushUserAction([FromBody] ZabbixRequestModel zabbixRequestModel, CancellationToken cancellationToken)
+    public async Task<IActionResult> PushUserAction([FromBody] ZabbixRequestModel zabbixRequestModel,
+        CancellationToken cancellationToken)
     {
         return await Execute(_userActionProvider.SaveUserAction(zabbixRequestModel, cancellationToken));
     }
 
-    [Route("api/UserAction/Push")]
+    [Route("api/UserAction/Get")]
     [HttpPost]
-    public async Task<bool> GetUserAction([FromBody] UserActionRequestModel userActionModel, CancellationToken cancellationToken)
+    public async Task GetUserAction([FromBody] UserActionRequestModel userActionModel,
+        CancellationToken cancellationToken)
     {
-        return await Execute(async () => await _userActionProvider.GetUserAction(userActionModel, cancellationToken));
+        await Execute(async () => await _userActionProvider.GetUserAction(userActionModel, cancellationToken));
     }
 }

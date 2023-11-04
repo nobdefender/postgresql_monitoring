@@ -11,9 +11,9 @@ public class ActionController : BaseController
 {
     private readonly IActionProvider _actionProvider;
 
-    public ActionController(ILogger<UserController> logger, IHttpContextAccessor httpContextAccessor,
+    public ActionController(ILogger<UserController> logger,
         IActionProvider actionProvider)
-        : base(httpContextAccessor, logger)
+        : base(logger)
     {
         _actionProvider = actionProvider;
     }
@@ -74,7 +74,8 @@ public class ActionController : BaseController
     /// <returns>Список доступных действий</returns>
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPut(nameof(UpdateUserActions))]
-    public async Task<IResult> UpdateUserActions([FromBody] UpdateUserActionsDTO? dto, CancellationToken cancellationToken)
+    public async Task<IResult> UpdateUserActions([FromBody] UpdateUserActionsDTO? dto,
+        CancellationToken cancellationToken)
     {
         try
         {

@@ -1,4 +1,4 @@
-﻿using Monitoring.Postgresql.Mappings;
+﻿using Monitoring.Postgresql.Mappers;
 
 namespace Monitoring.Postgresql.Registrars;
 
@@ -10,11 +10,7 @@ public static class MapperRegistrar
     /// <param name="services">Коллекция дескрипторов сервисов.</param>
     public static IServiceCollection RegisterMapper(this IServiceCollection services)
     {
-        services.AddAutoMapper(srv =>
-        {
-            srv.AddProfile<UserActionRequestModelToUserActionDbModelMapping>();
-            srv.AddProfile<UserActionRequestModelToUserActionDbModelMapping>();
-        });
+        services.AddAutoMapper(srv => { srv.AddProfile<DbModelsToDTOModels>(); });
 
         return services;
     }
