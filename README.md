@@ -1,5 +1,4 @@
 <h1 align="center">
-  <br>
   <a href="https://github.com/nobdefender/postgresql_monitoring"><img src="https://raw.githubusercontent.com/nobdefender/postgresql_monitoring/main/logo.png" alt="PostgreSQL Monitoring"></a>
 </h1>
 
