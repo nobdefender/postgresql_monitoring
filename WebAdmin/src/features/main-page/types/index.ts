@@ -8,3 +8,8 @@ export type Action = {
   notify_if_canceled: string;
   pause_symptoms: string;
 };
+
+export type UpdateUserActionsRequest = {
+    userId: number;
+    actionIds: string[];
+}

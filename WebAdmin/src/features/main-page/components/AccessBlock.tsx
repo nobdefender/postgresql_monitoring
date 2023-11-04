@@ -7,6 +7,7 @@ import { User } from '@/features/login-page/types';
 import isNil from 'lodash-es/isNil';
 import orderBy from 'lodash-es/orderBy';
 import find from 'lodash-es/find';
+import { useUpdateUserActions } from '../api/action/updateUserActions';
 
 type AccessBlockProps = {
   user?: User;
@@ -25,6 +26,8 @@ export const AccessBlock: React.FC<AccessBlockProps> = ({ user }) => {
       enabled: !isNil(user?.id),
     },
   });
+
+  const { mutate: updateUserActions } = useUpdateUserActions();
 
   useEffect(() => {
     const value = orderBy(
@@ -67,7 +70,20 @@ export const AccessBlock: React.FC<AccessBlockProps> = ({ user }) => {
           <Button
             w={140}
             variant={isEditing ? 'outline' : 'filled'}
-            onClick={() => setIsEditing((prev) => !prev)}
+            onClick={() =>
+              setIsEditing((prev) => {
+                if (prev) {
+                  updateUserActions({
+                    userId: user?.id as number,
+                    actionIds:
+                      localUserActions
+                        ?.filter(({ isSelected }) => isSelected)
+                        ?.map(({ actionid }) => actionid) ?? [],
+                  });
+                }
+                return !prev;
+              })
+            }
           >
             {isEditing ? 'Сохранить' : 'Редактировать'}
           </Button>
