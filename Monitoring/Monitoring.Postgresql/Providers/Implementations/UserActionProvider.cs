@@ -60,7 +60,6 @@ public class UserActionProvider : IUserActionProvider
         await _lockGetSelect.WaitAsync(cancellationToken);
         try
         {
-
             var userActionDbModel = _mapper.Map<UserActionDbModel>(userActionRequestModel);
 
             var hash = GetHash(userActionDbModel);
@@ -102,6 +101,7 @@ public class UserActionProvider : IUserActionProvider
             .AsNoTracking()
             .Include(x => x.TelegramBotUserDbModel)
             .Include(x => x.ActionDbModel)
+            .Where(x => x.IsDeleted == false)
             .GroupBy(x => x.TelegramBotUserDbModel.TelegramChatId)
             .ToArrayAsync(cancellationToken);
 

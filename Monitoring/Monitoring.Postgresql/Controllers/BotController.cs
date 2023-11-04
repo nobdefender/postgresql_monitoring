@@ -3,6 +3,7 @@ using Monitoring.Postgresql.Providers.Implementations;
 using Monitoring.Postgresql.Providers.Interfaces;
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Monitoring.Postgresql.Controllers;
 
@@ -24,6 +25,10 @@ public class BotController : ControllerBase
         _telegramBotUserProvider = telegramBotUserProvider;
     }
 
+    private readonly InlineKeyboardMarkup _startButtons = new InlineKeyboardMarkup(
+        new[] { InlineKeyboardButton.WithCallbackData("Id чата", $"get_chat_id")
+        });
+
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] Update update, CancellationToken cancellationToken)
     {
@@ -33,7 +38,7 @@ public class BotController : ControllerBase
             {
                 await _telegramBotUserProvider.Save(update.Message.Chat.Id, cancellationToken);
 
-                await _telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id, _startMessage);
+                await _telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id, _startMessage, replyMarkup: _startButtons);
                 return Ok();
             }
 
@@ -56,6 +61,12 @@ public class BotController : ControllerBase
             {
                 await _userActionProvider.SetSelect(update.CallbackQuery.Data, cancellationToken);
 
+                return Ok();
+            }
+
+            if (update.CallbackQuery?.Data == "get_chat_id")
+            {
+                await _telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id, $"{update.Message.Chat.Id}");
                 return Ok();
             }
         }
