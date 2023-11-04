@@ -72,7 +72,7 @@ public class ActionProvider : IActionProvider
             action.IsDeleted = true;
         }
 
-        foreach (var id in dto.ActionIds)
+        foreach (var id in dto.Ids)
         {
             await _monitoringServiceDbContext.TelegramBotUserToAction.AddAsync(new TelegramToUserToActionDbModel()
             {

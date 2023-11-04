@@ -1,27 +1,52 @@
-# React + TypeScript + Vite
+<h1 align="center">
+  Web Admin Application
+</h1>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Development
 
-Currently, two official plugins are available:
+To get a local copy of the code, clone it using git:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
+```
+git clone https://github.com/nobdefender/postgresql_monitoring.git
+cd WebAdmin
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Make it your own:
+
+```
+rm -rf .git && git init && yarn init
+git add .
+git commit -m "Initial commit"
+```
+
+Install dependencies:
+
+```
+yarn
+```
+
+Now, you can start a local web server by running:
+
+```
+yarn dev
+```
+
+And then open http://localhost:3000 to view it in the browser.
+
+#### Available Scripts
+
+In this project, you can run the following scripts:
+
+| Script       | Description                                             |
+| ------------ | ------------------------------------------------------- |
+| yarn dev     | Runs the app in the development mode.                   |
+| yarn build   | Builds the app for production to the `build` folder.    |
+| yarn preview | Run local server in production mode.                    |
+
+## Support
+
+Reach out to me via the **[profile addresses](https://github.com/nobdefender)**.
+
+## License
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-lightgrey.svg)](https://opensource.org/license/mit/)

@@ -20,6 +20,11 @@ public class ActionDbModel
     /// </summary>
     public string Name { get; set; }
     
+    /// <summary>
+    /// Описание действия
+    /// </summary>
+    public string Description { get; set; }
+    
     [JsonIgnore]
     public List<TelegramToUserToActionDbModel>? UserToActionDbModels { get; set; }
 }

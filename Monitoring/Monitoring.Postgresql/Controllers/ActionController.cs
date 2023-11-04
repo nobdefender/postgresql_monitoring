@@ -159,7 +159,7 @@ public class ActionController : BaseController
     /// </summary>
     /// <param name="dto"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns>Список доступных действий</returns>
+    /// <returns></returns>
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPut(nameof(UpdateTelegramBotUserActions))]
     public async Task<IResult> UpdateTelegramBotUserActions([FromBody] UpdateUserActionsDTO? dto,
