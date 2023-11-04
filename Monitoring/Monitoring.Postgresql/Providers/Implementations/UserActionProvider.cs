@@ -60,7 +60,6 @@ public class UserActionProvider : IUserActionProvider
         await _lockGetSelect.WaitAsync(cancellationToken);
         try
         {
-
             var userActionDbModel = _mapper.Map<UserActionDbModel>(userActionRequestModel);
 
             var hash = GetHash(userActionDbModel);
