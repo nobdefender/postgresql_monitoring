@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Monitoring.Posgresql.Infrastructure.Models.TelegramBot;
 using Monitoring.Postgresql.Providers.Implementations;
 using Monitoring.Postgresql.Providers.Interfaces;
 using Telegram.Bot;
@@ -25,10 +26,6 @@ public class BotController : ControllerBase
         _telegramBotUserProvider = telegramBotUserProvider;
     }
 
-    private readonly InlineKeyboardMarkup _startButtons = new InlineKeyboardMarkup(
-        new[] { InlineKeyboardButton.WithCallbackData("Id чата", $"get_chat_id")
-        });
-
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] Update update, CancellationToken cancellationToken)
     {
@@ -36,21 +33,36 @@ public class BotController : ControllerBase
         {
             if (update.Message?.Text == "/start")
             {
-                await _telegramBotUserProvider.Save(update.Message.Chat.Id, cancellationToken);
+                var startKeyboard = new ReplyKeyboardMarkup
+                (
+                    new[]
+                    {
+                        new[] {
+                            new KeyboardButton("Id чата"),
+                        }
+                    }
+                )
+                {
+                    ResizeKeyboard = true,
+                };
 
-                await _telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id, _startMessage, replyMarkup: _startButtons);
+                var telegramBotUserDbModel = new TelegramBotUserDbModel
+                { 
+                    TelegramChatId = update.Message.Chat.Id,
+                    FirstName = update.Message.Chat.FirstName,
+                    LastName = update.Message.Chat.LastName,
+                    UserName = update.Message.Chat.Username
+                };
+
+                await _telegramBotUserProvider.Save(telegramBotUserDbModel, cancellationToken);
+
+                await _telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id, _startMessage, replyMarkup: startKeyboard);
                 return Ok();
             }
 
-            if (new[] { "/get_chat_id", "/getid" }.Contains(update.Message?.Text))
+            if (new[] { "/get_chat_id", "/getid", "Id чата" }.Contains(update.Message?.Text))
             {
                 await _telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id, $"{update.Message.Chat.Id}");
-                return Ok();
-            }
-
-            if (update.Message?.Text == "/end")
-            {
-                await _telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id, "end");
                 return Ok();
             }
         }
@@ -61,12 +73,6 @@ public class BotController : ControllerBase
             {
                 await _userActionProvider.SetSelect(update.CallbackQuery.Data, cancellationToken);
 
-                return Ok();
-            }
-
-            if (update.CallbackQuery?.Data == "get_chat_id")
-            {
-                await _telegramBotClient.SendTextMessageAsync(update.Message.Chat.Id, $"{update.Message.Chat.Id}");
                 return Ok();
             }
         }

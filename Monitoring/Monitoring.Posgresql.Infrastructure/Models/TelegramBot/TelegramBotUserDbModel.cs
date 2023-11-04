@@ -20,6 +20,21 @@ public class TelegramBotUserDbModel
     /// </summary>
     public long TelegramChatId { get; set; }
 
+    /// <summary>
+    /// Имя пользователя
+    /// </summary>
+    public string? FirstName { get; set; }
+
+    /// <summary>
+    /// Фамилия пользователя
+    /// </summary>
+    public string? LastName { get; set; }
+
+    /// <summary>
+    /// Ник пользователя в телеграмме
+    /// </summary>
+    public string? UserName { get; set; }
+
     [JsonIgnore]
     public List<TelegramToUserToActionDbModel> UserToActionDbModels { get; set; }
 }

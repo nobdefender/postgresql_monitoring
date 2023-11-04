@@ -10,14 +10,12 @@ public class TelegramBotUserProvider : ITelegramBotUserProvider
 {
     private readonly MonitoringServiceDbContext _monitoringServiceDbContext;
     private readonly ILogger<TelegramBotUserProvider> _logger;
-    private readonly IMapper _mapper;
 
     public TelegramBotUserProvider(MonitoringServiceDbContext monitoringServiceDbContext,
-        ILogger<TelegramBotUserProvider> logger, IMapper mapper)
+        ILogger<TelegramBotUserProvider> logger)
     {
         _monitoringServiceDbContext = monitoringServiceDbContext;
         _logger = logger;
-        _mapper = mapper;
     }
 
     public async Task<IEnumerable<TelegramBotUserDbModel>> GetAllTelegramBotUsersAsync(
@@ -27,15 +25,14 @@ public class TelegramBotUserProvider : ITelegramBotUserProvider
         return await users.ToListAsync(cancellationToken);
     }
 
-    public async Task Save(long chatId, CancellationToken cancellationToken)
+    public async Task Save(TelegramBotUserDbModel telegramBotUserDbModel, CancellationToken cancellationToken)
     {
         var userExists = await _monitoringServiceDbContext.TelegramBotUsers
             .AsNoTracking()
-            .AnyAsync(x => x.TelegramChatId == chatId, cancellationToken);
+            .AnyAsync(x => x.TelegramChatId == telegramBotUserDbModel.TelegramChatId, cancellationToken);
 
         if (!userExists)
         {
-            var telegramBotUserDbModel = new TelegramBotUserDbModel() { TelegramChatId = chatId };
             await _monitoringServiceDbContext.TelegramBotUsers.AddAsync(telegramBotUserDbModel, cancellationToken);
 
             await _monitoringServiceDbContext.SaveChangesAsync(cancellationToken);
