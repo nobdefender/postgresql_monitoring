@@ -1,4 +1,4 @@
-﻿using Monitoring.Postgresql.Mappers;
+﻿using Monitoring.Postgresql.Mappings;
 
 namespace Monitoring.Postgresql.Registrars;
 
