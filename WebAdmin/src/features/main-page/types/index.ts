@@ -1,17 +1,12 @@
 export type Action = {
-  actionid: string;
+  id: number;
   name: string;
-  eventsource: string;
-  status: string;
-  esc_period: string;
-  pause_suppressed: string;
-  notify_if_canceled: string;
-  pause_symptoms: string;
+  description: string;
 };
 
 export type UpdateUserActionsRequest = {
   telegramBotUserId: number;
-  actionIds: string[];
+  ids: number[];
 };
 
 export type TelegramBotUser = {
