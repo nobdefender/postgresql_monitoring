@@ -13,6 +13,7 @@ public static class MapperRegistrar
         services.AddAutoMapper(srv =>
         {
             srv.AddProfile<DbModelsToDTOModelsMapping>();
+            srv.AddProfile<ActionDTOtoActionDbModelMapping>();
             srv.AddProfile<UserActionRequestModelToUserActionDbModelMapping>();
         });
 

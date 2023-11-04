@@ -7,7 +7,6 @@ public class UserActionRequestModelToUserActionDbModelMapping : Profile
 {
     public UserActionRequestModelToUserActionDbModelMapping()
     {
-        CreateMap<UserActionRequestModel, UserActionDbModel>()
-            ;
+        CreateMap<UserActionRequestModel, UserActionDbModel>();
     }
 }
