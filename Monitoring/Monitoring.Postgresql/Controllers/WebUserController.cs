@@ -7,17 +7,17 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace Monitoring.Postgresql.Controllers;
 
-public class UserController : UserBaseController
+public class WebUserController : UserBaseController
 {
-    private readonly IUserProvider _userProvider;
+    private readonly IWebUserProvider _webUserProvider;
 
-    public UserController(
-        ILogger<UserController> logger,
+    public WebUserController(
+        ILogger<WebUserController> logger,
         IHttpContextAccessor httpContextAccessor,
-        IUserProvider userProvider)
+        IWebUserProvider webUserProvider)
         : base(httpContextAccessor, logger)
     {
-        _userProvider = userProvider;
+        _webUserProvider = webUserProvider;
     }
 
     /// <summary>
@@ -34,7 +34,7 @@ public class UserController : UserBaseController
     {
         try
         {
-            var user = await _userProvider.LoginAsync(userLoginRequest, cancellationToken);
+            var user = await _webUserProvider.WebUserLoginAsync(userLoginRequest, cancellationToken);
             return user;
         }
         catch (Exception e)
@@ -57,7 +57,7 @@ public class UserController : UserBaseController
     {
         try
         {
-            var result = await _userProvider.RefreshAsync(tokens, cancellationToken);
+            var result = await _webUserProvider.WebUserRefreshAsync(tokens, cancellationToken);
             return result;
         }
         catch (Exception e)
@@ -78,7 +78,7 @@ public class UserController : UserBaseController
     {
         try
         {
-            var result = await _userProvider.GetAllUsersAsync(cancellationToken);
+            var result = await _webUserProvider.GetAllWebUsersAsync(cancellationToken);
             return Results.Ok(result);
         }
         catch (Exception e)
@@ -96,13 +96,13 @@ public class UserController : UserBaseController
     {
         try
         {
-            var userId = _userProvider.GetUserIdByJwtToken(token);
+            var userId = _webUserProvider.GetWebUserIdByJwtToken(token);
             if (userId == null)
             {
                 return Results.NotFound("Пользователь не найден");
             }
 
-            var user = await _userProvider.GetById(userId, cancellationToken);
+            var user = await _webUserProvider.GetWebUserById(userId, cancellationToken);
             return Results.Ok(user);
         }
         catch (Exception e)
@@ -125,7 +125,7 @@ public class UserController : UserBaseController
     {
         try
         {
-            var result = await _userProvider.UpsertUserAsync(model, cancellationToken);
+            var result = await _webUserProvider.UpsertWebUserAsync(model, cancellationToken);
             return result;
         }
         catch (Exception e)
@@ -148,7 +148,7 @@ public class UserController : UserBaseController
     {
         try
         {
-            var result = await _userProvider.SetPasswordAsync(model, cancellationToken);
+            var result = await _webUserProvider.SetWebUserPasswordAsync(model, cancellationToken);
             return result;
         }
         catch (Exception e)

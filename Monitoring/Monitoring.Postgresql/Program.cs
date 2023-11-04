@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using Monitoring.Postgresql.Extensions;
 using Monitoring.Postgresql.Logic.Registrars;
 using Monitoring.Posgresql.Infrastructure.Extensions;
+using Monitoring.Posgresql.Infrastructure.Models.TelegramBot;
 
 var builder = WebApplication.CreateBuilder(args);
 var conf = builder.Configuration;
@@ -34,8 +35,6 @@ builder.Services.AddCors(options =>
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddSettings(conf);
 builder.Services.AddControllers().AddNewtonsoftJson();
-builder.Services.AddTransient<IUserProvider, UserProvider>();
-builder.Services.AddTransient<IActionProvider, ActionProvider>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters()

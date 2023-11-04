@@ -10,12 +10,11 @@ using Microsoft.IdentityModel.Tokens;
 using Monitoring.Posgresql.Infrastructure;
 using Monitoring.Postgresql.Settings;
 using AutoMapper;
-using Monitoring.Posgresql.Infrastructure.Models.TelegramBot;
 using Monitoring.Posgresql.Infrastructure.Models.WebAuth;
 
 namespace Monitoring.Postgresql.Providers.Implementations;
 
-public class UserProvider : IUserProvider
+public class WebWebUserProvider : IWebUserProvider
 {
     private const string PASSWORD_SALT = "passSalt";
 
@@ -23,24 +22,26 @@ public class UserProvider : IUserProvider
     private readonly JwtSettings _jwtSettings;
     private readonly MonitoringServiceDbContext _monitoringServiceDbContext;
 
-    public UserProvider(MonitoringServiceDbContext monitoringServiceDbContext, JwtSettings jwtSettings, IMapper mapper)
+    public WebWebUserProvider(MonitoringServiceDbContext monitoringServiceDbContext, JwtSettings jwtSettings, IMapper mapper)
     {
         _mapper = mapper;
         _jwtSettings = jwtSettings;
         _monitoringServiceDbContext = monitoringServiceDbContext;
     }
-    
-    public Task<IEnumerable<WebUserDTO>> GetAllUsersAsync(CancellationToken cancellationToken)
+
+    public Task<IEnumerable<WebUserDTO>> GetAllWebUsersAsync(CancellationToken cancellationToken)
     {
         var users = _monitoringServiceDbContext.WebUsers;
         return Task.FromResult(users.Select(_mapper.Map<WebUserDTO>));
     }
-    
-    public async Task<IResult> LoginAsync(UserLoginRequest userLoginRequest,
+
+    public async Task<IResult> WebUserLoginAsync(UserLoginRequest userLoginRequest,
         CancellationToken cancellationToken = default)
     {
-        var existedUser = await _monitoringServiceDbContext.WebUsers.FirstOrDefaultAsync(u => u.Username == userLoginRequest.Username, cancellationToken);
-        if(existedUser == null)
+        var existedUser =
+            await _monitoringServiceDbContext.WebUsers.FirstOrDefaultAsync(u => u.Username == userLoginRequest.Username,
+                cancellationToken);
+        if (existedUser == null)
         {
             return Results.NotFound("Пользователь не найден");
         }
@@ -70,15 +71,15 @@ public class UserProvider : IUserProvider
 
         await _monitoringServiceDbContext.SaveChangesAsync(cancellationToken);
 
-        return Results.Ok(new UserWithTokenDTO() 
-        { 
+        return Results.Ok(new UserWithTokenDTO()
+        {
             WebUser = userDTO,
             AccessToken = accessToken,
             RefreshToken = refreshToken
         });
     }
-    
-    public async Task<IResult> RefreshAsync(TokenApiModel? tokens, CancellationToken cancellationToken)
+
+    public async Task<IResult> WebUserRefreshAsync(TokenApiModel? tokens, CancellationToken cancellationToken)
     {
         if (tokens is null)
         {
@@ -102,6 +103,7 @@ public class UserProvider : IUserProvider
         {
             return Results.BadRequest("Несоответствие Refresh токена");
         }
+
         if (user.RefreshTokenExpiryTime <= DateTime.Now)
         {
             return Results.BadRequest("Истекло время Rfresh токена");
@@ -122,20 +124,19 @@ public class UserProvider : IUserProvider
         });
     }
 
-    public async Task<WebUserDTO?> GetById(int? id, CancellationToken cancellationToken = default)
+    public async Task<WebUserDTO?> GetWebUserById(int? id, CancellationToken cancellationToken = default)
     {
         var user = await _monitoringServiceDbContext.WebUsers.FirstOrDefaultAsync(w => w.Id == id,
             cancellationToken: cancellationToken);
         return user != null ? _mapper.Map<WebUserDTO>(user) : null;
     }
-    
-    public async Task<IResult> UpsertUserAsync(UpsertWebUserDTO model, CancellationToken cancellationToken)
+
+    public async Task<IResult> UpsertWebUserAsync(UpsertWebUserDTO model, CancellationToken cancellationToken)
     {
         var dbModel = _mapper.Map<WebUserDbModel>(model);
 
-        var existedUser = await _monitoringServiceDbContext.WebUsers.
-            AsNoTracking().
-            FirstOrDefaultAsync(p => p.EmailAddress == dbModel.EmailAddress, cancellationToken);
+        var existedUser = await _monitoringServiceDbContext.WebUsers.AsNoTracking()
+            .FirstOrDefaultAsync(p => p.EmailAddress == dbModel.EmailAddress, cancellationToken);
 
         if (existedUser is null)
         {
@@ -144,6 +145,7 @@ public class UserProvider : IUserProvider
 
             return Results.Ok();
         }
+
         dbModel.Id = existedUser.Id;
         dbModel.Password = existedUser.Password;
         existedUser = dbModel;
@@ -154,16 +156,16 @@ public class UserProvider : IUserProvider
         return Results.Ok();
     }
 
-    public async Task<IResult> SetPasswordAsync(SetPasswordDTO model, CancellationToken cancellationToken)
+    public async Task<IResult> SetWebUserPasswordAsync(SetPasswordDTO model, CancellationToken cancellationToken)
     {
-        var user = await _monitoringServiceDbContext.WebUsers.
-            AsNoTracking().
-            FirstOrDefaultAsync(p => p.EmailAddress == model.EmailAddress.ToLower(), cancellationToken);
+        var user = await _monitoringServiceDbContext.WebUsers.AsNoTracking()
+            .FirstOrDefaultAsync(p => p.EmailAddress == model.EmailAddress.ToLower(), cancellationToken);
 
         if (user is null)
         {
             return Results.NotFound("Пользователь не найден");
         }
+
         user.Password = GetPasswordHash(model.Password);
         _monitoringServiceDbContext.Entry(user).State = EntityState.Modified;
 
@@ -171,7 +173,7 @@ public class UserProvider : IUserProvider
 
         return Results.Ok();
     }
-    
+
     private ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token)
     {
         var tokenValidationParameters = new TokenValidationParameters()
@@ -196,7 +198,7 @@ public class UserProvider : IUserProvider
         return principal;
     }
 
-    public int? GetUserIdByJwtToken(string token)
+    public int? GetWebUserIdByJwtToken(string token)
     {
         var secret = _jwtSettings.Key;
         var key = Encoding.ASCII.GetBytes(secret);
@@ -222,7 +224,7 @@ public class UserProvider : IUserProvider
         randomNumber.GetBytes(randomBytes);
         return Convert.ToBase64String(randomBytes);
     }
-    
+
     public string GenerateAccessToken(IEnumerable<Claim> claims)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
@@ -246,7 +248,7 @@ public class UserProvider : IUserProvider
             prf: KeyDerivationPrf.HMACSHA256,
             iterationCount: 100,
             numBytesRequested: 64));
-        
+
         return hashed;
     }
 }

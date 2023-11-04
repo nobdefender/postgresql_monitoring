@@ -19,6 +19,7 @@ public class DbModelsToDTOModelsMapping : Profile
         CreateMap<TelegramBotUserDbModel, WebUserDTO>().ReverseMap();
         CreateMap<ActionDbModel, ActionDTO>();
         CreateMap<UserActionRequestModel, UserActionDbModel>();
+        CreateMap<WebUserDbModel, WebUserDTO>();
     }
 
     private static TimeSpan? Deserialize(string? timeSpan) =>
