@@ -11,7 +11,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 
 export const AppRoutes = () => {
   const { data: userResponse } = useUser();
-  const { setUser } = useAuthenticationContext();
+  const { user, setUser } = useAuthenticationContext();
 
   useEffect(() => {
     if (!isNil(userResponse)) {
@@ -25,7 +25,16 @@ export const AppRoutes = () => {
       <LayoutBody>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/main" element={<MainPage />} />
+          <Route
+            path="/main"
+            element={
+              !isNil(user) || !isNil(storage.getToken('accessToken')) ? (
+                <MainPage />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
           <Route path="*" element={<Navigate to="/main" replace />} />
           {isNil(storage.getToken('accessToken')) && (
             <Route path="*" element={<Navigate to="/login" replace />} />
