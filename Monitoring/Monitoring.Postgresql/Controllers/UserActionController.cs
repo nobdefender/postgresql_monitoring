@@ -11,7 +11,6 @@ public class UserActionController : BaseController
     private readonly IUserActionProvider _userActionProvider;
 
     public UserActionController(ILogger<UserActionController> logger, IUserActionProvider userActionProvider) : base(logger)
-        base(logger)
     {
         _userActionProvider = userActionProvider;
     }
@@ -20,7 +19,6 @@ public class UserActionController : BaseController
     [Route("api/UserAction/Push")]
     [HttpPost]
     public async Task<IActionResult> Push([FromBody] ZabbixRequestModel zabbixRequestModel, CancellationToken cancellationToken)
-        CancellationToken cancellationToken)
     {
         return await Execute(_userActionProvider.Save(zabbixRequestModel, cancellationToken));
     }
@@ -30,7 +28,6 @@ public class UserActionController : BaseController
     [Route("api/UserAction/CheckSelect")]
     [HttpPost]
     public async Task<IActionResult> CheckSelect([FromBody] UserActionRequestModel userActionModel, CancellationToken cancellationToken)
-        CancellationToken cancellationToken)
     {
         return await Execute(async () => await _userActionProvider.CheckSelect(userActionModel, cancellationToken));
     }
