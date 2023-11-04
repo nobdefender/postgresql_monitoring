@@ -27,7 +27,7 @@ public class ActionProvider : IActionProvider
     {
         var actionsId = _monitoringServiceDbContext.UserToAction
             .Where(x => x.UserId == userId && !x.IsDeleted.HasValue).Select(x => x.ActiondId).ToList();
-        var actions = _monitoringServiceDbContext.Actions.Where(x => actionsId.Contains(x.Actionid)).ToList();
+        var actions = _monitoringServiceDbContext.Actions.Where(x => actionsId.Contains(x.Id)).ToList();
         return Task.FromResult(actions.Select(_mapper.Map<ActionDTO>));
     }
 }

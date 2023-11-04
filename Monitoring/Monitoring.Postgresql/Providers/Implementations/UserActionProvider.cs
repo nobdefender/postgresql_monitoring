@@ -43,9 +43,7 @@ public class UserActionProvider : IUserActionProvider
         }
 
         var upsertOperations = userActionDbModels.Select(x => new ReplaceOneModel<UserActionDbModel>(
-                        Builders<UserActionDbModel>.Filter.Eq(y => y.Hash, x.Hash),
-                        x
-                        )
+            Builders<UserActionDbModel>.Filter.Eq(y => y.Hash, x.Hash), x)
         {
             IsUpsert = true
         });
@@ -55,7 +53,7 @@ public class UserActionProvider : IUserActionProvider
         await SendMessage(userActionDbModels, zabbixRequestModel.Message, cancellationToken);
     }
 
-    public async Task<bool> GetSelect(UserActionRequestModel userActionRequestModel, CancellationToken cancellationToken)
+    public async Task<bool> CheckSelect(UserActionRequestModel userActionRequestModel, CancellationToken cancellationToken)
     {
         await _lockGetSelect.WaitAsync();
         try
@@ -85,7 +83,7 @@ public class UserActionProvider : IUserActionProvider
         }
     }
 
-    public async Task Select(string callbackData, CancellationToken cancellationToken)
+    public async Task SetSelect(string callbackData, CancellationToken cancellationToken)
     {
         var userActionHash = long.Parse(callbackData.Split('_').Last());
 
@@ -96,14 +94,14 @@ public class UserActionProvider : IUserActionProvider
 
     private async Task SendMessage(UserActionDbModel[] userActionDbModels, string message, CancellationToken cancellationToken)
     {
-        //var userActionName = userActionDbModels.Select(x => x.ActionName);
+        var userActionName = userActionDbModels.Select(x => x.ActionName);
 
-        //var actions = _monitoringServiceDbContext.Actions.Where(x => userActionName.Contains(x.Name));
+        var actions = _monitoringServiceDbContext.Actions.Where(x => userActionName.Contains(x.Name));
 
-        //if (!actions.Any())
-        //{
-        //    return;
-        //}
+        if (!actions.Any())
+        {
+            return;
+        }
 
         long[] chatIds = new[] { 1458662165l };
 

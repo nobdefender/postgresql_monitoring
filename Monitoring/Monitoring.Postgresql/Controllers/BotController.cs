@@ -52,7 +52,7 @@ namespace Monitoring.Postgresql.Controllers
             {
                 if (update.CallbackQuery?.Data?.StartsWith("UserAction") ?? false)
                 {
-                    await _userActionProvider.Select(update.CallbackQuery.Data, cancellationToken);
+                    await _userActionProvider.SetSelect(update.CallbackQuery.Data, cancellationToken);
 
                     return Ok();
                 }

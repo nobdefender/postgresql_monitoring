@@ -43,6 +43,11 @@ public class UserDbModel
     public string? RefreshToken { get; set; }
 
     /// <summary>
+    /// Id чата телеграм
+    /// </summary>
+    public long TelegramChatId { get; set; }
+
+    /// <summary>
     /// Время действия Refresh токена
     /// </summary>
     public DateTime? RefreshTokenExpiryTime { get; set; }

@@ -19,7 +19,7 @@ public class UserActionController : BaseController
     [SwaggerRequestExample(typeof(ZabbixRequestModel), typeof(ZabbixRequestModel))]
     [Route("api/UserAction/Push")]
     [HttpPost]
-    public async Task<IActionResult> PushUserAction([FromBody] ZabbixRequestModel zabbixRequestModel, CancellationToken cancellationToken)
+    public async Task<IActionResult> Push([FromBody] ZabbixRequestModel zabbixRequestModel, CancellationToken cancellationToken)
     {
         return await Execute(_userActionProvider.Save(zabbixRequestModel, cancellationToken));
     }
@@ -28,8 +28,8 @@ public class UserActionController : BaseController
     [SwaggerResponse(200, Type = typeof(bool))]
     [Route("api/UserAction/CheckSelect")]
     [HttpPost]
-    public async Task<IActionResult> GetUserAction([FromBody] UserActionRequestModel userActionModel, CancellationToken cancellationToken)
+    public async Task<IActionResult> CheckSelect([FromBody] UserActionRequestModel userActionModel, CancellationToken cancellationToken)
     {
-        return await Execute(async () => await _userActionProvider.GetSelect(userActionModel, cancellationToken));
+        return await Execute(async () => await _userActionProvider.CheckSelect(userActionModel, cancellationToken));
     }
 }

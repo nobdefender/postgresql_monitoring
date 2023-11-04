@@ -15,7 +15,7 @@ public class UserToActionDbModel
     /// <summary>
     /// Идентификатор действия
     /// </summary>
-    public string ActiondId { get; set; }
+    public int ActiondId { get; set; }
 
     /// <summary>
     /// Удалена ли запись
