@@ -23,7 +23,7 @@ public class TelegramBotUserController : BaseController
     /// </summary>
     /// <returns></returns>
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [HttpPost(nameof(GetAllTelegramBotUsers))]
+    [HttpGet(nameof(GetAllTelegramBotUsers))]
     [SwaggerResponse(200, Type = typeof(string))]
     public async Task<IResult> GetAllTelegramBotUsers(CancellationToken cancellationToken)
     {

@@ -34,7 +34,7 @@ public class ActionProvider : IActionProvider
     public async Task UpdateTelegramBotUserActionsAsync(UpdateUserActionsDTO dto, CancellationToken cancellationToken)
     {
         var actions = _monitoringServiceDbContext.TelegramBotUserToAction
-            .Where(x => x.TelegramBotUserId == dto.UserId && !x.IsDeleted.HasValue).ToList();
+            .Where(x => x.TelegramBotUserId == dto.TelegramBotUserId && !x.IsDeleted.HasValue).ToList();
         foreach (var action in actions)
         {
             action.IsDeleted = true;
@@ -45,7 +45,7 @@ public class ActionProvider : IActionProvider
             await _monitoringServiceDbContext.TelegramBotUserToAction.AddAsync(new TelegramToUserToActionDbModel()
             {
                 ActiondId = id,
-                TelegramBotUserId = dto.UserId
+                TelegramBotUserId = dto.TelegramBotUserId
             }, cancellationToken);
         }
 

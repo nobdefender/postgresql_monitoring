@@ -22,8 +22,8 @@ public class ActionController : BaseController
     /// <param name="cancellationToken"></param>
     /// <returns>Список доступных действий</returns>
     [AllowAnonymous]
-    [HttpGet(nameof(AllActions))]
-    public async Task<IResult> AllActions(CancellationToken cancellationToken)
+    [HttpGet(nameof(AllTelegramBotUsersActions))]
+    public async Task<IResult> AllTelegramBotUsersActions(CancellationToken cancellationToken)
     {
         try
         {
@@ -44,8 +44,8 @@ public class ActionController : BaseController
     /// <param name="cancellationToken"></param>
     /// <returns>Список доступных действий</returns>
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [HttpGet(nameof(UserActions))]
-    public async Task<IResult> UserActions([FromQuery] int? userId, CancellationToken cancellationToken)
+    [HttpGet(nameof(TelegramBotUserActions))]
+    public async Task<IResult> TelegramBotUserActions([FromQuery] int? userId, CancellationToken cancellationToken)
     {
         try
         {
@@ -60,7 +60,7 @@ public class ActionController : BaseController
         catch (Exception e)
         {
             _logger.LogError(e, "Ошибка получения списка действий");
-            return Results.NotFound("Список действий не получен");
+            return Results.NotFound("Список действий пользователя не получен");
         }
     }
 
@@ -88,7 +88,7 @@ public class ActionController : BaseController
         catch (Exception e)
         {
             _logger.LogError(e, "Ошибка получения списка действий");
-            return Results.NotFound("Список действий не получен");
+            return Results.NotFound("Список разрешенных действий не обновлен");
         }
     }
 }

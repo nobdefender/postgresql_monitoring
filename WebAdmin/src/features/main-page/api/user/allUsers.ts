@@ -1,21 +1,22 @@
-import { User } from '@/features/login-page/types';
+import { WebUser } from '@/features/login-page/types';
 import { axios } from '@/lib/axios';
 import { ExtractFnReturnType } from '@/lib/react-query';
 import { UseQueryOptions, useQuery } from '@tanstack/react-query';
+import { TelegramBotUser } from '../../types';
 
-export const getAllUsers = (): Promise<User[]> => {
-  return axios.get('/user/allUsers');
+export const getAllTelegramBotUsers = (): Promise<TelegramBotUser[]> => {
+  return axios.get('/telegramBotUser/getAllTelegramBotUsers');
 };
 
-type QueryFnType = typeof getAllUsers;
-type UseGetAllUsersRequest = {
-  config?: UseQueryOptions<User[]>;
+type QueryFnType = typeof getAllTelegramBotUsers;
+type UseGetAllTelegramBotUsersRequest = {
+  config?: UseQueryOptions<TelegramBotUser[]>;
 };
 
-export const useAllUsers = ({ config }: UseGetAllUsersRequest = {}) => {
+export const useAllTelegramBotUsers = ({ config }: UseGetAllTelegramBotUsersRequest = {}) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: ['get-all-users'],
-    queryFn: () => getAllUsers(),
+    queryKey: ['get-all-telegram-bot-users'],
+    queryFn: () => getAllTelegramBotUsers(),
     ...config,
   });
 };

@@ -1,11 +1,11 @@
-import { User } from '@/features/login-page/types';
+import { WebUser } from '@/features/login-page/types';
 import { axios } from '@/lib/axios';
 import { ExtractFnReturnType } from '@/lib/react-query';
 import { UseQueryOptions, useQuery } from '@tanstack/react-query';
 import { Action } from '../../types';
 
 export const getUserActions = (userId: { userId: number }): Promise<Action[]> => {
-  return axios.get('/action/userActions', { params: userId });
+  return axios.get('/action/telegramBotuserActions', { params: userId });
 };
 
 type QueryFnType = typeof getUserActions;

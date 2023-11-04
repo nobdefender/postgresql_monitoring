@@ -1,10 +1,10 @@
-import { User } from '@/features/login-page/types';
+import { WebUser } from '@/features/login-page/types';
 import noop from 'lodash-es/noop';
 import { PropsWithChildren, createContext, useContext, useState } from 'react';
 
 type AuthenticationContextValue = {
-  user: User | null;
-  setUser: (value: User | null) => void;
+  user: WebUser | null;
+  setUser: (value: WebUser | null) => void;
 };
 
 const AuthenticationContext = createContext<AuthenticationContextValue>({
@@ -13,7 +13,7 @@ const AuthenticationContext = createContext<AuthenticationContextValue>({
 });
 
 export const AuthenticationContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<WebUser | null>(null);
   return (
     <AuthenticationContext.Provider
       value={{

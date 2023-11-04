@@ -1,6 +1,6 @@
 import { configureAuth } from 'react-query-auth';
 import { storage } from '@/utils/storage';
-import { LoginCredentials, User, UserLoginResponse } from '@/features/login-page/types';
+import { LoginCredentials, WebUser, UserLoginResponse } from '@/features/login-page/types';
 import { getUser } from '@/features/login-page/api/getUser';
 import { loginWithLoginAndPassword } from '@/features/login-page/api/login';
 import {
@@ -9,13 +9,12 @@ import {
 } from '@/features/login-page/api/register';
 
 function handleUserResponse(data: UserLoginResponse) {
-  const { accessToken, refreshToken, user } = data;
+  const { accessToken, refreshToken } = data;
   storage.setToken('accessToken', accessToken);
   storage.setToken('refreshToken', refreshToken);
-  return user;
 }
 
-async function userFn(): Promise<User | null> {
+async function userFn(): Promise<WebUser | null> {
   const accessToken: string = storage.getToken('accessToken');
   if (accessToken) {
     return (await getUser(accessToken)) ?? null;
@@ -27,7 +26,7 @@ async function userFn(): Promise<User | null> {
 async function loginFn(data: LoginCredentials) {
   const response = await loginWithLoginAndPassword(data);
   handleUserResponse(response);
-  return response.user;
+  return response.webUser;
 }
 
 async function registerFn(data: RegisterCredentials) {
@@ -42,7 +41,7 @@ async function logoutFn() {
 }
 
 export const { useUser, useLogin, useRegister, useLogout, AuthLoader } = configureAuth<
-  User | null,
+  WebUser | null,
   unknown,
   LoginCredentials,
   RegisterCredentials

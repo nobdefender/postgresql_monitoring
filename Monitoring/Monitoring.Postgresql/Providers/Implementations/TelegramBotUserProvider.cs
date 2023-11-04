@@ -12,11 +12,19 @@ public class TelegramBotUserProvider : ITelegramBotUserProvider
     private readonly ILogger<TelegramBotUserProvider> _logger;
     private readonly IMapper _mapper;
 
-    public TelegramBotUserProvider(MonitoringServiceDbContext monitoringServiceDbContext, ILogger<TelegramBotUserProvider> logger, IMapper mapper)
+    public TelegramBotUserProvider(MonitoringServiceDbContext monitoringServiceDbContext,
+        ILogger<TelegramBotUserProvider> logger, IMapper mapper)
     {
         _monitoringServiceDbContext = monitoringServiceDbContext;
         _logger = logger;
         _mapper = mapper;
+    }
+
+    public async Task<IEnumerable<TelegramBotUserDbModel>> GetAllTelegramBotUsersAsync(
+        CancellationToken cancellationToken)
+    {
+        var users = _monitoringServiceDbContext.TelegramBotUsers;
+        return await users.ToListAsync(cancellationToken);
     }
 
     public async Task Save(long chatId, CancellationToken cancellationToken)
@@ -25,22 +33,12 @@ public class TelegramBotUserProvider : ITelegramBotUserProvider
             .AsNoTracking()
             .AnyAsync(x => x.TelegramChatId == chatId, cancellationToken);
 
-        if (userExists)
+        if (!userExists)
         {
-            return;
+            var telegramBotUserDbModel = new TelegramBotUserDbModel() { TelegramChatId = chatId };
+            await _monitoringServiceDbContext.TelegramBotUsers.AddAsync(telegramBotUserDbModel, cancellationToken);
+
+            await _monitoringServiceDbContext.SaveChangesAsync(cancellationToken);
         }
-
-        var telegramBotUserDbModel = new TelegramBotUserDbModel() { TelegramChatId = chatId };
-
-        await _monitoringServiceDbContext.TelegramBotUsers.AddAsync(telegramBotUserDbModel, cancellationToken);
-
-        await _monitoringServiceDbContext.SaveChangesAsync(cancellationToken);
-    }
-    
-      public async Task<IEnumerable<TelegramBotUserDbModel>> GetAllTelegramBotUsersAsync(
-        CancellationToken cancellationToken)
-    {
-        var users = _monitoringServiceDbContext.TelegramBotUsers;
-        return await users.ToListAsync(cancellationToken);
     }
 }

@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { UpdateUserActionsRequest } from '../../types';
 
 export const updateUserActions = (request: UpdateUserActionsRequest): Promise<boolean> => {
-  return axios.put('/action/updateUserActions', request);
+  return axios.put('/action/updateTelegramBotUserActions', request);
 };
 
 type UseUpdateUserActionsRequest = {
