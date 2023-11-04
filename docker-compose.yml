@@ -8,7 +8,7 @@ services:
       - POSTGRES_DB=MonitoringService
       - POSTGRES_PASSWORD=docker
     ports:
-      - local_port:5432
+      - 5432:5432
     networks:
       - default
     restart: unless-stopped
@@ -17,7 +17,7 @@ services:
     image: mongo:7.0.2
     container_name: app-mongodb
     ports:
-      - local_port:27017
+      - 27017:27017
     networks:
       - default
     restart: unless-stopped
@@ -25,10 +25,10 @@ services:
   app-api:
     container_name: app-api
     build:
-      context: ./Monitoring/Monitoring.Postgresql
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: Monitoring/Monitoring.Postgresql/Dockerfile
     ports:
-      - "5298:5298"
+      - "5298:80"
     restart: unless-stopped
     environment:
       - "DOTNET_ENVIRONMENT=${DOTNET_ENVIRONMENT}"
