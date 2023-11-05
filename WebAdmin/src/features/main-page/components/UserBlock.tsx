@@ -15,6 +15,7 @@ export const UserBlock: React.FC<UserBlockProps> = ({ telegramUser, setTelegramU
   return (
     <Paper p="lg" w={500} h={500} withBorder>
       <Select
+        searchable
         value={telegramUser?.userName}
         placeholder="Выберите пользователя"
         data={allTelegramBotUsers?.map(({ userName }) => userName) ?? []}
