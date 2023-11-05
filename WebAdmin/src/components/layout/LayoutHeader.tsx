@@ -12,52 +12,50 @@ export const LayoutHeader: React.FC = () => {
   const { user, setUser } = useAuthenticationContext();
 
   return (
-    <AppShell header={{ height: 60 }}>
-      <AppShell.Header>
-        <Flex h="100%" justify="space-between" align="center">
-          <Title pl="xl" order={3}>
-            PostgreSQL Monitoring Tool Admin
-          </Title>
-          {!isNil(user) && (
-            <Flex pr={120} h="100%" align="center" justify="flex-end">
-              <Menu offset={25} withinPortal width={260}>
-                <Menu.Target>
-                  <Flex gap="sm" align="center" className={classes.menuTarget}>
-                    <Flex align="center" gap="xs">
-                      <Text fw={600}>
-                        {user?.name} {user?.lastName}
-                      </Text>
-                      <IconChevronDown size={14} />
-                    </Flex>
-                  </Flex>
-                </Menu.Target>
-                <Menu.Dropdown>
-                  <Box p="lg">
-                    <Text ta="center">
+    <AppShell.Header>
+      <Flex h="100%" justify="space-between" align="center">
+        <Title pl="xl" order={3}>
+          PostgreSQL Monitoring Tool Admin
+        </Title>
+        {!isNil(user) && (
+          <Flex pr={120} h="100%" align="center" justify="flex-end">
+            <Menu offset={25} withinPortal width={260}>
+              <Menu.Target>
+                <Flex gap="sm" align="center" className={classes.menuTarget}>
+                  <Flex align="center" gap="xs">
+                    <Text fw={600}>
                       {user?.name} {user?.lastName}
                     </Text>
-                    <Title ta="center" order={5}>
-                      {user?.role === 'Admin' ? 'Администратор' : 'Пользователь'}
-                    </Title>
-                  </Box>
+                    <IconChevronDown size={14} />
+                  </Flex>
+                </Flex>
+              </Menu.Target>
+              <Menu.Dropdown>
+                <Box p="lg">
+                  <Text ta="center">
+                    {user?.name} {user?.lastName}
+                  </Text>
+                  <Title ta="center" order={5}>
+                    {user?.role === 'Admin' ? 'Администратор' : 'Пользователь'}
+                  </Title>
+                </Box>
 
-                  <Menu.Label>Настройки</Menu.Label>
-                  <Menu.Item
-                    leftSection={<IconLogout size={14} stroke={1.5} />}
-                    onClick={() => {
-                      setUser(null);
-                      logout.mutate({});
-                      navigate('/login');
-                    }}
-                  >
-                    Выйти
-                  </Menu.Item>
-                </Menu.Dropdown>
-              </Menu>
-            </Flex>
-          )}
-        </Flex>
-      </AppShell.Header>
-    </AppShell>
+                <Menu.Label>Настройки</Menu.Label>
+                <Menu.Item
+                  leftSection={<IconLogout size={14} stroke={1.5} />}
+                  onClick={() => {
+                    setUser(null);
+                    logout.mutate({});
+                    navigate('/login');
+                  }}
+                >
+                  Выйти
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
+          </Flex>
+        )}
+      </Flex>
+    </AppShell.Header>
   );
 };

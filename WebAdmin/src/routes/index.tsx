@@ -1,10 +1,12 @@
 import { LayoutBody } from '@/components/layout/LayoutBody';
+import { LayoutFooter } from '@/components/layout/LayoutFooter';
 import { LayoutHeader } from '@/components/layout/LayoutHeader';
 import { LoginPage } from '@/features/login-page/components/LoginPage';
 import { MainPage } from '@/features/main-page/components/MainPage';
 import { useUser } from '@/lib/auth';
 import { useAuthenticationContext } from '@/providers/Authentication.context';
 import { storage } from '@/utils/storage';
+import { AppShell } from '@mantine/core';
 import isNil from 'lodash-es/isNil';
 import { useEffect } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
@@ -20,7 +22,7 @@ export const AppRoutes = () => {
   }, [setUser, userResponse]);
 
   return (
-    <>
+    <AppShell header={{ height: 60 }} footer={{ height: 60 }}>
       <LayoutHeader />
       <LayoutBody>
         <Routes>
@@ -41,6 +43,7 @@ export const AppRoutes = () => {
           )} */}
         </Routes>
       </LayoutBody>
-    </>
+      <LayoutFooter />
+    </AppShell>
   );
 };
