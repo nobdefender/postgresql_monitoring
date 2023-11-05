@@ -43,6 +43,16 @@ This tool uses **Zabbix Server** on the monitoring tool server and **Zabbix Agen
 3. **[Download](https://github.com/nobdefender/postgresql_monitoring/archive/refs/tags/release.zip)** the latest version of the tool.
 4. Extract archive with source code.
 5. Run command in cmd: <br /> `docker compose -f ./docker-compose.yml up --build -d`
+6. Setup Zabbix
+![Alt text](ZabbixServer/RestartPostgresScript.png?raw=true)
+![Alt text](ZabbixServer/MediaType.png?raw=true)
+![Alt text](ZabbixServer/ActionPostgresDown1.png?raw=true)
+![Alt text](ZabbixServer/ActionPostgresDown2.png?raw=true)
+![Alt text](ZabbixServer/ActionRestartPostgres1.png?raw=true)
+![Alt text](ZabbixServer/ActionRestartPostgres2.png?raw=true)
+![Alt text](ZabbixServer/TriggerPostgresDown.png?raw=true)
+![Alt text](ZabbixServer/ItemRestartPostgres.png?raw=true)
+![Alt text](ZabbixServer/TriggerRestartPostgres.png?raw=true)
 
 ## Features
 
