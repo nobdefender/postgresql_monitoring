@@ -91,6 +91,7 @@ export const AccessBlock: React.FC<AccessBlockProps> = ({ telegramUser }) => {
                         ?.map(({ id }) => id) ?? [],
                   });
                 }
+
                 return !prev;
               })
             }

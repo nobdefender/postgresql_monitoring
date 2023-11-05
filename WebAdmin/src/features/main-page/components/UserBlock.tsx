@@ -1,8 +1,19 @@
-import { Flex, Paper, Select, Title, Text, Box } from '@mantine/core';
+import {
+  Flex,
+  Paper,
+  Select,
+  Title,
+  Text,
+  Box,
+  ComboboxData,
+  ComboboxItem,
+  isElement,
+} from '@mantine/core';
 import find from 'lodash-es/find';
 import { useAllTelegramBotUsers } from '../api/user/allUsers';
 import { TelegramBotUser } from '../types';
 import isNil from 'lodash-es/isNil';
+import isEmpty from 'lodash-es/isEmpty';
 
 type UserBlockProps = {
   telegramUser?: TelegramBotUser;
@@ -15,12 +26,18 @@ export const UserBlock: React.FC<UserBlockProps> = ({ telegramUser, setTelegramU
   return (
     <Paper p="lg" w={500} h={500} withBorder>
       <Select
-        searchable
-        value={telegramUser?.userName}
+        value={telegramUser?.telegramChatId.toString()}
         placeholder="Выберите пользователя"
-        data={allTelegramBotUsers?.map(({ userName }) => userName) ?? []}
+        data={
+          allTelegramBotUsers?.map(({ userName, telegramChatId }) => ({
+            value: telegramChatId.toString(),
+            label: `Ник: ${
+              isNil(userName) || isEmpty(userName) ? '-' : userName
+            }; ChatId: ${telegramChatId}`,
+          })) ?? []
+        }
         onChange={(value) => {
-          const newValue = find(allTelegramBotUsers, { userName: value as string });
+          const newValue = find(allTelegramBotUsers, { telegramChatId: Number(value) });
           if (!isNil(newValue)) {
             setTelegramUser(newValue);
           }
