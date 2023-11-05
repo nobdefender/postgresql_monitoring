@@ -14,7 +14,7 @@ export const LayoutBody: React.FC<LayoutBodyProps> = ({ children }) => {
   const isMainRoute = useMatch('/main');
 
   return (
-    <Stack mt={60} h="100%">
+    <Stack mt={60} h="100%" bg='gray.1'>
       {!isNil(user) ? (
         <>
           <Box w="70%" my="xl" mx="auto">

@@ -27,7 +27,7 @@ export const LoginPage: React.FC = () => {
   }, []);
 
   return (
-    <Flex bgsz="contain" bg="url(https://synergy.ru/assets/upload/news/academy/task1.jpg)" h="100%">
+    <Flex bg="url(./admin-preview.png)" h="100%">
       <Paper w={500} h="100%" radius={0} p={30}>
         <Flex justify="center">
           <img src={Logo128}></img>

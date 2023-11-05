@@ -30,15 +30,17 @@ export const AccessBlock: React.FC<AccessBlockProps> = ({ telegramUser }) => {
   const { mutate: updateUserActions } = useUpdateUserActions();
 
   useEffect(() => {
-    const value = orderBy(
-      allActions?.map((item) => ({
-        ...item,
-        isSelected: userActions?.map(({ name }) => name).includes(item.name) ?? false,
-      })),
-      'name'
-    );
-    setLocalUserActions(value);
-  }, [userActions]);
+    if (!isNil(allActions)) {
+      const value = orderBy(
+        allActions?.map((item) => ({
+          ...item,
+          isSelected: userActions?.map(({ name }) => name).includes(item.name) ?? false,
+        })),
+        'name'
+      );
+      setLocalUserActions(value);
+    }
+  }, [allActions, userActions]);
 
   return (
     <Paper p="lg" w={500} h={500} withBorder>

@@ -12,4 +12,7 @@ export type UpdateUserActionsRequest = {
 export type TelegramBotUser = {
   id: number;
   telegramChatId: number;
+  firstName: string;
+  lastName: string;
+  userName: string;
 };
